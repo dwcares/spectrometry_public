@@ -1,12 +1,67 @@
+<div align="center">
+
+<img src="../../docs/media/oscilloscope.webp" width="220" alt="Oscilloscope preview: a green phosphor rose pattern on a simulated CRT">
+
 # Oscilloscope
+
+**A simulated CRT screen, and a film filter for any video.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **A simulated CRT screen.** A phosphor persistence buffer, a three-stage model of filming that
 screen with a camera, an acquisition-fault layer, and a video→ASCII front end that feeds the same
 filter.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/look_dimensional_t035.jpg"><img src="frames/look_dimensional_t035.jpg" width="24%" alt="Oscilloscope still"></a>
+<a href="frames/look_loop_braid_t070.jpg"><img src="frames/look_loop_braid_t070.jpg" width="24%" alt="Oscilloscope still"></a>
+<a href="frames/look_loop_braid_filmed_t050.jpg"><img src="frames/look_loop_braid_filmed_t050.jpg" width="24%" alt="Oscilloscope still"></a>
+<a href="frames/look_dimensional2d_t045.jpg"><img src="frames/look_dimensional2d_t045.jpg" width="24%" alt="Oscilloscope still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/oscilloscope/src/requirements.txt
+```
+
+**Put the filmed-CRT look on any video you have:**
+
+```bash
+python engines/oscilloscope/src/filter_cli.py in.mp4 out.mp4 --glitch 0.8
+```
+
+It probes the size and frame rate, streams decode → process → encode, and copies the source audio
+across. Around 0.8 is subtle and 1.8 is heavy; the `test_filmtest_*` [stills](frames/README.md)
+show three strengths side by side.
+
+**Or draw on the screen yourself:**
+
+```python
+import sys; sys.path.insert(0, "engines/oscilloscope/src")
+import numpy as np
+from osc import scope, config, crtfilm
+
+cfg = config.RenderConfig(width=1080, height=1920)
+sc  = scope.Scope(cfg)
+
+sc.new_frame()                                    # decay the phosphor
+theta = np.linspace(0, 2 * np.pi, 900)
+sc.beam(np.stack([np.sin(3 * theta), np.cos(2 * theta)], 1) * 0.8, gain=0.5)
+rgb = sc.render(grid_state=2)                     # 2 = faint axis cross, -1 = none
+
+look = crtfilm.FilmLook(1080, 1920, 60, 900, seed=7,
+                        **crtfilm.film_config_for_phosphor((0, 255, 80)))
+look.exposure = 1.75                              # thin trace on black
+frame = look.process(rgb, 0)
+```
+
+`film_config_for_phosphor()` derives the filter's colour behaviour from your trace colour, and it's
+cheap enough to call every frame, so a colour-changing scene needs no filter tuning at all.
 
 ## The core is one idea
 
@@ -72,31 +127,6 @@ python src/filter_cli.py in.mp4 out.mp4 --glitch 0.8
 It probes size and fps, streams decode→process→encode, and copies the source audio window. About
 0.8 is subtle and 1.8 is heavy. The [`test_filmtest_*` frames](frames/) are the A/B set if you are
 deciding how hard to push it.
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-import numpy as np
-from osc import scope, config, crtfilm
-
-cfg = config.RenderConfig(width=1080, height=1920)
-sc = scope.Scope(cfg)
-
-sc.new_frame()                                    # decay the phosphor
-theta = np.linspace(0, 2*np.pi, 900)
-sc.beam(np.stack([np.sin(3*theta), np.cos(2*theta)], 1) * 0.8, gain=0.5)
-rgb = sc.render(grid_state=2)                     # 2 = faint axis cross, -1 = none
-
-look = crtfilm.FilmLook(1080, 1920, 60, 900, seed=7,
-                        **crtfilm.film_config_for_phosphor((0, 255, 80)))
-look.exposure = 1.75                              # thin trace on black
-frame = look.process(rgb, 0)
-```
 
 ## Four things that cost time to learn
 
@@ -182,3 +212,13 @@ and re-seed their statics per size.
   imports the withheld compositions, so it could not ship; the format itself is described in the
   catalogue and there are four frames from it.
 - **The chemical-profile format**, which has its own engine: [chemical-scope](../chemical-scope/).
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

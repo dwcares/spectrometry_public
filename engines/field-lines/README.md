@@ -1,13 +1,56 @@
+<div align="center">
+
+<img src="../../docs/media/field-lines.webp" width="220" alt="Field Lines preview: glowing blue electric field lines around moving charges">
+
 # Field Lines
+
+**Electric, magnetic and flow fields, drawn as glowing lines.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **Field lines and streamlines of a closed-form vector field, integrated in arclength** and drawn
 as neon polylines with beat-locked packets riding along them. Electrostatics, potential flow and
 magnetostatics all come out of one integrator, because a field here is nothing more than a
 callable.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/charge_wave_t045.jpg"><img src="frames/charge_wave_t045.jpg" width="24%" alt="Field Lines still"></a>
+<a href="frames/dipole_flower_t045.jpg"><img src="frames/dipole_flower_t045.jpg" width="24%" alt="Field Lines still"></a>
+<a href="frames/pair_dance_t045.jpg"><img src="frames/pair_dance_t045.jpg" width="24%" alt="Field Lines still"></a>
+<a href="frames/stream_glass_t045.jpg"><img src="frames/stream_glass_t045.jpg" width="24%" alt="Field Lines still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/field-lines/src/requirements.txt
+```
+
+```python
+import sys; sys.path.insert(0, "engines/field-lines/src")
+import numpy as np
+from fl import field, lines
+
+charges = field.ChargeSet().set([(0., 0.), (0., 300.)], [6.0, -2.0])
+seeds   = lines.seed_ring((0., 0.), r0=40., n_max=48)
+
+pts, length, ended = lines.trace(
+    charges, seeds, ds=6.0, n_steps=440,
+    sinks=charges.sinks(), capture_r=16.0,
+    bounds=(-540., 540., -960., 960.))
+
+for code, name in enumerate(lines.END_NAMES):
+    print(f"{name:8s} {np.count_nonzero(ended == code)}")
+```
+
+That traces the field lines of a +6 and a −2 charge and tells you how each line ended. Swap
+`charges` for a `PotentialFlow` and every line above still runs unchanged. That's the whole
+design: a field is any callable `f(P) -> V` on an `(N, 2)` array, so adding one changes nothing
+downstream.
 
 ## Nothing here solves a PDE
 
@@ -61,32 +104,6 @@ whole fan snap — the single most likely visual bug in this format.
 
 State is `(N,2)` and the loop is over the arclength index. A per-line Python loop turns about 450
 vector operations into 90,000 scalar-ish ones and costs roughly 50×.
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-import numpy as np
-from fl import field, lines
-
-charges = field.ChargeSet().set([(0., 0.), (0., 300.)], [6.0, -2.0])
-seeds = lines.seed_ring((0., 0.), r0=40., n_max=48)
-pts, length, ended = lines.trace(
-    charges, seeds, ds=6.0, n_steps=440,
-    sinks=charges.sinks(), capture_r=16.0,
-    bounds=(-540., 540., -960., 960.))
-
-for code, name in enumerate(lines.END_NAMES):
-    print(f"{name:8s} {np.count_nonzero(ended == code)}")
-```
-
-Swap `charges` for a `PotentialFlow` and every line above still runs. That is the whole point of
-the design — a field is any callable `f(P) -> V` on an `(N,2)` array, and adding one changes
-nothing downstream.
 
 ## How to verify, and what verification does not tell you
 
@@ -173,3 +190,13 @@ The one thing to re-derive is the arclength budget, since it must clear a bounds
 - **Audio.** The format is built for it — the packet period is already one bar at 96 BPM, and line
   count and source magnitude are exactly the channels a track should drive — but nothing is wired
   up. The keep-them-equal rule if you add it: build `start` must equal mux `-ss`.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

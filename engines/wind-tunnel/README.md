@@ -1,4 +1,14 @@
+<div align="center">
+
+<img src="../../docs/media/wind-tunnel.webp" width="220" alt="Wind Tunnel preview: three airfoils shedding vortices, coloured by flow speed">
+
 # Wind Tunnel
+
+**Real 2-D fluid dynamics, rendered as video.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **A real fluid solver driving a colour-field animation.** Incompressible 2-D flow past bodies,
 rendered as a colour-mapped speed field with advected white streaklines. It started as a wind
@@ -6,9 +16,45 @@ tunnel and is now more general than its name: the same solver runs a sealed pool
 seen from above, and three spinning holes that fall together and merge like droplets. What is
 fixed is the *method*, not the subject.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/black_holes_t045.jpg"><img src="frames/black_holes_t045.jpg" width="24%" alt="Wind Tunnel still"></a>
+<a href="frames/jet_engine_t045.jpg"><img src="frames/jet_engine_t045.jpg" width="24%" alt="Wind Tunnel still"></a>
+<a href="frames/mach_shapes_t075.jpg"><img src="frames/mach_shapes_t075.jpg" width="24%" alt="Wind Tunnel still"></a>
+<a href="frames/falling_discs_t075.jpg"><img src="frames/falling_discs_t075.jpg" width="24%" alt="Wind Tunnel still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/wind-tunnel/src/requirements.txt
+```
+
+```python
+import sys; sys.path.insert(0, "engines/wind-tunnel/src")
+import numpy as np
+from wt import lbm, shapes
+
+sim  = lbm.LBM(nx=240, ny=420, u0=0.06, re=800)
+foil = shapes.place(shapes.naca4("2412"), chord=90, cx=120, cy=140, aoa_deg=8)
+sim.set_solid(shapes.rasterize([foil], 240, 420))
+sim.run(400)
+
+print(f"stability {sim.health():.3f}, peak speed {np.abs(sim.ux).max():.4f}")
+```
+
+That's a NACA 2412 wing at 8° in a real lattice-Boltzmann flow, run for 400 steps. Bodies are
+boolean masks rasterised from polygons every step, so there's no meshing anywhere: you can move,
+rotate or reshape a body mid-clip and nothing downstream notices.
+
+There are 18 shape generators, including NACA sections, cylinders, plates, wedges, a jet-engine
+cross-section, a surfboard and a cow. `image_body()` traces a polygon straight out of a PNG's alpha
+channel, so anything you can draw becomes a solid the fluid flows around.
+
+`wt/render.py` takes it from there: `Tunnel` owns the lattice-to-screen mapping, the frame clock,
+the ffmpeg pipe and the divergence guard. An NVIDIA GPU makes everything much faster (see the note
+in `src/requirements.txt`), but it all runs on the CPU too.
 
 ## The one thing to understand
 
@@ -79,28 +125,6 @@ which is why a body can move, rotate or change shape with nothing downstream not
 `src/tools/sod_check.py` runs the compressible solver against the **exact Sod shock-tube
 solution**; `src/tools/shock_check.py` measures an oblique shock's angle and post-shock state
 against the **θ–β–M relation**. Both ship. If you change anything in `cns.py`, run them.
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-import numpy as np
-from wt import lbm, shapes
-
-sim = lbm.LBM(nx=240, ny=420, u0=0.06, re=800)
-foil = shapes.place(shapes.naca4("2412"), chord=90, cx=120, cy=140, aoa_deg=8)
-sim.set_solid(shapes.rasterize([foil], 240, 420))
-sim.run(400)
-
-print(sim.health(), np.abs(sim.ux).max())
-```
-
-`wt/render.py` takes it from there — `Tunnel` owns the lattice-to-screen mapping, the frame clock,
-the ffmpeg pipe and the divergence guard.
 
 ## Orientation
 
@@ -187,7 +211,7 @@ off-camera and an appearing body's pressure transient has room to decay. It cost
 
 - **`wt/scenes.py`** — the compositions. See [CATALOG.md](CATALOG.md) for what each one
   demonstrates and frames from most of them.
-- **`shapes.rocket()` and the `rocket_engine` composition** — withheld at the author's request.
+- **`shapes.rocket()` and the `rocket_engine` composition** — held back on purpose.
   `wt/dye.py`, the D2Q5 species transport it used, *is* here: it is general, and `render.py`
   depends on it.
 - **The composition-dependent check tools.** See the section above.
@@ -197,3 +221,13 @@ duplicating a 300-line filter that would drift out of sync. It resolves that pat
 directory, so keep the two engines side by side or point `OSC_ROOT` elsewhere. Note that it must
 be handed a **neutral white phosphor** config — the green defaults are only correct for a
 single-hue trace and would wreck a full-colour field.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

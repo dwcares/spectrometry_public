@@ -1,11 +1,53 @@
+<div align="center">
+
+<img src="../../docs/media/attractors.webp" width="220" alt="Attractors preview: a Lorenz butterfly drawn by thousands of glowing particles">
+
 # Attractors
+
+**Chaos, drawn by tens of thousands of particles.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **Tens of thousands of particles integrated through a strange-attractor flow at once.** Nothing is
 traced — the picture is built entirely by where particles crowd.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/attractor_tour_t030.jpg"><img src="frames/attractor_tour_t030.jpg" width="24%" alt="Attractors still"></a>
+<a href="frames/attractor_tour_t052.jpg"><img src="frames/attractor_tour_t052.jpg" width="24%" alt="Attractors still"></a>
+<a href="frames/attractor_tour_t074.jpg"><img src="frames/attractor_tour_t074.jpg" width="24%" alt="Attractors still"></a>
+<a href="frames/lorenz_swarm_t055.jpg"><img src="frames/lorenz_swarm_t055.jpg" width="24%" alt="Attractors still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/attractors/src/requirements.txt   # numpy + Pillow
+```
+
+```python
+import sys; sys.path.insert(0, "engines/attractors/src")
+from at import core, draw
+
+print("flows:   ", sorted(core.FLOWS))
+print("palettes:", sorted(draw.PALETTES))
+
+s = core.Swarm("lorenz", n=42000, seed=1)
+s.step(1 / 60.)
+print(f"{s.P.shape[0]} particles, mean speed {s.speed().mean():.1f}")
+```
+
+That builds a 42,000-particle swarm on the Lorenz attractor and advances it one frame. RK4 on an
+`(N, 3)` array costs the same four function calls as RK4 on one point, so the particles are
+essentially free next to the rasteriser.
+
+When you draw it, `core.project` returns a 2-D position **and a depth**. Use the depth: with
+40,000 additive points, a purely flat projection turns a 3-D object into a smear, while a weak
+perspective divide plus depth-keyed size and brightness is enough to separate the front and back
+lobes.
 
 ## Why a swarm and not an orbit
 
@@ -44,29 +86,6 @@ two-dimensional sheet in about four seconds, because the flow contracts volume e
 thin filament within a few seconds and the picture loses every part of the attractor the
 trajectory is not on right now. Respawning a few percent per second back onto the reference orbit
 keeps the whole invariant measure lit.
-
-## Quick start
-
-```bash
-pip install numpy scipy pillow
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-from at import core, draw
-
-s = core.Swarm("lorenz", n=42000, seed=1)
-canvas = draw.Canvas(1080, 1920, palette="ember", trail=0.86)
-
-for i in range(900):                       # 15 s at 60 fps
-    s.step(1 / 60.)
-    s.respawn(0.055 / 60.)
-    P, z, u = ...                          # project, then splat
-```
-
-`core.project` returns a 2-D position **and a depth**. Use the depth. With 40,000 additive points
-a purely orthographic view turns a 3-D object into a flat smear; a weak perspective divide plus
-depth-keyed size and brightness is enough to separate the front and back lobes.
 
 ## Six flows, and how to add one
 
@@ -125,3 +144,13 @@ dynamics knows the aspect ratio. A landscape plate is a different `Canvas` size 
 The oscilloscope engine has its own, unrelated attractor treatment: **one** beam tracing a single
 orbit, with the figure emerging from phosphor persistence, which is exactly what a real X-Y scope
 does with a pair of voltages. Same systems, opposite measurement.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

@@ -1,12 +1,54 @@
+<div align="center">
+
+<img src="../../docs/media/chemical-scope.webp" width="220" alt="Chemical Scope preview: serotonin and its FTIR spectrum drawn on a green CRT">
+
 # Chemical Scope
+
+**29 molecules and their spectra, drawn on a CRT.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **Twenty-nine molecules, each with an FTIR and a Raman spectrum, drawn as a CRT oscilloscope
 screen.** Molecule above, spectrum below, both stroked as phosphor traces.
 
-📖 **[Object catalogue](CATALOG.md)** — every molecule with both frames ·
-🖼 **[Frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/dopamine_t030.jpg"><img src="frames/dopamine_t030.jpg" width="24%" alt="Chemical Scope still"></a>
+<a href="frames/serotonin_t082.jpg"><img src="frames/serotonin_t082.jpg" width="24%" alt="Chemical Scope still"></a>
+<a href="frames/ibuprofen_t030.jpg"><img src="frames/ibuprofen_t030.jpg" width="24%" alt="Chemical Scope still"></a>
+<a href="frames/indigo_t082.jpg"><img src="frames/indigo_t082.jpg" width="24%" alt="Chemical Scope still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/chemical-scope/src/requirements.txt
+```
+
+```python
+import sys; sys.path.insert(0, "engines/chemical-scope/src")
+from chemical_data import MOLECULES
+
+print(len(MOLECULES), "molecules")
+m = MOLECULES["Morphine"]
+print(f"{len(m['AT'])} atoms, {len(m['BONDS'])} bonds, {len(m['ir_lines'])} IR lines")
+```
+
+Then render one:
+
+```bash
+cd engines/chemical-scope/src
+python chemical_profile.py Morphine --preview     # one molecule, fast
+python render_optimal.py                          # the whole set, three GPU lanes
+```
+
+`render_optimal.py` is the high-quality path. It splits every molecule into frame chunks and
+**work-steals** them across three GPU lanes, so idle lanes pick up the next chunk and the tail stays
+balanced. The pieces join seamlessly because each chunk warms the phosphor first and the film
+filter is indexed on the absolute frame number with a fixed seed.
 
 ## The format
 
@@ -77,31 +119,6 @@ A related hardening: strained bridged cages over-constrain the conformer embeddi
 outright. The generator falls back by dropping stereochemistry — which is not drawn anyway, so
 connectivity and 3-D depth stay valid — re-embedding, and then trying a second force field.
 
-## Quick start
-
-```bash
-pip install -r src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-from chemical_data import MOLECULES
-
-print(len(MOLECULES), "molecules")
-m = MOLECULES["Morphine"]
-print(len(m["AT"]), "atoms,", len(m["BONDS"]), "bonds,", len(m["ir_lines"]), "IR lines")
-```
-
-```bash
-python src/chemical_profile.py Morphine --preview      # one molecule
-python src/render_optimal.py                       # the whole set, 3 GPU lanes
-```
-
-`render_optimal.py` is the high-quality path: it splits every molecule into frame chunks and
-**work-steals** them across three GPU lanes, so idle lanes pick up the next chunk and the tail
-stays balanced. Concatenation is seamless because each chunk warms the phosphor first and the film
-filter is absolute-frame indexed with a fixed seed.
-
 ## Adding a molecule
 
 One entry in `MOLECULES`. Geometry can be transcribed by hand or generated from SMILES; either
@@ -166,3 +183,13 @@ came from; this engine is what it became once manim was dropped.
 - **The RDKit SMILES-to-geometry generators.** They live with the chemistry, in the
   [academia engine](../academia/).
 - **Audio.** This format ships silent by design.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

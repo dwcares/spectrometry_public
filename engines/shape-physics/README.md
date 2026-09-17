@@ -1,13 +1,66 @@
+<div align="center">
+
+<img src="../../docs/media/shape-physics.webp" width="220" alt="Shape Physics preview: balls breaking out of a spinning pink ring">
+
 # Shape Physics
+
+**Bouncing shapes, where the simulation decides when the music plays.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **A rigid-body-lite engine for "satisfying shapes" clips** — discs, spinning shells with gaps,
 destructible structures, collisions, gravity — **and audio that the simulation triggers.** That
 last part is the inverse of how the rest of this repository works, and it is the reason the engine
 exists.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/escape_rings_t030.jpg"><img src="frames/escape_rings_t030.jpg" width="24%" alt="Shape Physics still"></a>
+<a href="frames/plinko_t075.jpg"><img src="frames/plinko_t075.jpg" width="24%" alt="Shape Physics still"></a>
+<a href="frames/gear_cage_t075.jpg"><img src="frames/gear_cage_t075.jpg" width="24%" alt="Shape Physics still"></a>
+<a href="frames/pendulum_rows_t075.jpg"><img src="frames/pendulum_rows_t075.jpg" width="24%" alt="Shape Physics still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/shape-physics/src/requirements.txt   # numpy + Pillow, nothing else
+```
+
+```python
+import sys; sys.path.insert(0, "engines/shape-physics/src")
+from sim import world, build, audio
+
+obstacles  = build.polygon_shell(540, 960, 210, n_sides=6,
+                                 thickness=14., missing=(0,), omega=1.2)
+obstacles += build.walls(60, 1020, 100, 1820)
+
+w = world.World(obstacles, cx=540, cy=960, width=1080, height=1920,
+                gravity=1500., initial=1)
+for _ in range(2 * 900):          # 2 seconds at the 900 Hz physics rate
+    w.step(1 / 900.)
+
+print(f"{len(w.bounces)} bounces, {len(w.triggers)} headline events")
+
+score = audio.Score(slice_len=0.5)
+for t in (1.0, 1.2, 3.0):
+    score.fire(t)
+print(f"{len(score.segments)} segments from 3 events")   # 2: the first two merged
+```
+
+**Run the simulation with no drawing before you render anything.** It takes about a third of a
+second for a twenty-second clip, and it prints the escape counts, every trigger time and the
+resulting audio segments. Tune gap width, spin, friction and gravity against that, never against
+renders.
+
+Three primitives build everything: a `Ring` (a hollow shell with gaps), a `Capsule` (a segment
+swept by a disc, which becomes polygons, funnels, chutes, spirals, paddles, pendulums and bricks),
+and a `Peg` (a disc, optionally orbiting, optionally with restitution above 1 so it's a real
+energising bumper). They all resolve through the same two functions, so they interact correctly
+with each other for free.
 
 ## The audio rule
 
@@ -58,36 +111,6 @@ two resolvers, which is why they interact correctly with each other for free:
 chooses geometry, materials and forcing — radius, gap width, spin rate, restitution, friction,
 gravity, what spawns and when. It does **not** place a ball on a path. Every bounce, escape and
 fall is solved. That is what makes the motion read as real.
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt   # numpy + Pillow, nothing else
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-from sim import world, build, audio
-
-obstacles  = build.polygon_shell(540, 960, 210, n_sides=6, thickness=14., missing=(0,), omega=1.2)
-obstacles += build.walls(60, 1020, 100, 1820)
-
-w = world.World(obstacles, cx=540, cy=960, width=1080, height=1920, gravity=1500., initial=1)
-for _ in range(2 * 900):          # 2 s at the 900 Hz physics rate
-    w.step(1 / 900.)
-
-print(len(w.bounces), "bounces,", len(w.triggers), "headline events")
-
-score = audio.Score(slice_len=0.5)
-for t in (1.0, 1.2, 3.0):
-    score.fire(t)
-print(len(score.segments), "segments")   # 2 — the first two events merged
-```
-
-**Run the simulation with no drawing before you render anything.** It is about 0.3 s for a 20 s
-clip, and it prints the escape counts, every trigger time and the resulting audio segments. Tune
-gap width, spin, friction and gravity against *that*, never against renders. A composition whose
-brief is "balls escape and fire sounds" needs a check that measures exactly that.
 
 ## Eleven rules that are load-bearing
 
@@ -204,3 +227,13 @@ isotropic, or to your own aspect.
   headline event is, its measured event and bounce counts, and frames.
 - **Audio files.** `SONGS` is empty and `SONGS_DIR` points at a `songs/` directory beside the
   source. Drop your own files there, or pass an absolute path.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

@@ -1,13 +1,46 @@
+<div align="center">
+
+<img src="../../docs/media/academia.webp" width="220" alt="Academia preview: stacked simulated spectra for a whole class of molecules">
+
 # Academia
+
+**Stacked spectra figures for whole classes of molecules.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](figures/README.md) · [Source](src/)
+
+</div>
 
 **The figure code behind the PDF deliverables.** Give it a compound class as a set of SMILES and
 it produces a publication figure: every molecule in the class stacked as a simulated spectrum,
 with its structure drawn beside it, as a vector PDF.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Figure previews](figures/)** · 💾 **[Source](src/)** ·
-🎬 **[manim subproject](manim/)**
+<p align="center">
+<a href="figures/example_ftir_overlay.jpg"><img src="figures/example_ftir_overlay.jpg" width="49%" alt="Academia still"></a>
+<a href="figures/example_xrd_polymorph.jpg"><img src="figures/example_xrd_polymorph.jpg" width="49%" alt="Academia still"></a>
+<a href="figures/example_nmr_sim.jpg"><img src="figures/example_nmr_sim.jpg" width="49%" alt="Academia still"></a>
+<a href="figures/example_uv_dissolution.jpg"><img src="figures/example_uv_dissolution.jpg" width="49%" alt="Academia still"></a>
+</p>
 
----
+## Start here
+
+Academia needs **its own virtual environment**: RDKit wants `numpy<2`, and every other
+engine here uses numpy 2. From the repo root:
+
+```bash
+pip install -r engines/academia/src/requirements.txt   # RDKit, matplotlib, numpy<2, scipy
+cd engines/academia/src
+python amino_acid_sim_test.py
+```
+
+```
+4 stacked PDFs in .../figures/amino_acids
+```
+
+Read `amino_acid_sim_test.py` first. It's the reference implementation of the format, and it's
+under 170 lines. Copy `extra_classes_sim_test.py` if you're adding a class of your own.
+
+The simulated figure scripts need no network at all. Measured data isn't part of this repo:
+`registry.py` fetches it from wherever `SPECTRA_DATA_URL` points.
 
 ## What it does
 
@@ -58,21 +91,6 @@ comparison axis is a chemical choice, not a fixed feature:
 | neurotransmitters | freebase / protonated | the amine is the reactive site |
 | peptides | reduced / oxidised | the disulfide, which is why both glutathione forms are in the set |
 | steroids | free / ester | the prodrug modification |
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt   # RDKit, matplotlib, numpy<2, scipy
-cd src && python amino_acid_sim_test.py
-```
-
-```
-4 stacked PDFs in .../figures/amino_acids
-```
-
-Read `amino_acid_sim_test.py` first — it is the reference implementation of the format, and it is
-under 170 lines. `extra_classes_sim_test.py` is the one to copy if you are adding a class of your
-own.
 
 ## Two things to get right
 
@@ -171,3 +189,13 @@ compile from an elevated one, and the failure message does not say so.
 - **Measured data.** It lives in a separate repository and is fetched by `registry.py`.
 - **The marimo UI and preset gallery**, the DFT job inputs, and the isoxazole deliverable
   sub-package — outside the figure pipeline this engine is scoped to.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>

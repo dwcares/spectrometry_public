@@ -1,13 +1,54 @@
+<div align="center">
+
+<img src="../../docs/media/lattice-grid.webp" width="220" alt="Lattice Grid preview: a honeycomb of tiny coloured circuit symbols flickering to a beat">
+
 # Lattice Grid
+
+**A circuit lattice that re-rolls on the beat.**
+
+[← All engines](../README.md) · [What it can make](CATALOG.md) · [Stills](frames/README.md) · [Source](src/)
+
+</div>
 
 **A fixed lattice of nodes and connectors, lit by a moving field.** The lattice is generated once
 and never moves; what changes is the content sitting on it, which re-rolls on the musical beat,
 and the illumination sweeping across it. Everything composites additively and blooms, so dense
 clusters run to white on their own.
 
-📖 **[Object catalogue](CATALOG.md)** · 🖼 **[Reference frames](frames/)** · 💾 **[Source](src/)**
+<p align="center">
+<a href="frames/circuit_hex_t045.jpg"><img src="frames/circuit_hex_t045.jpg" width="24%" alt="Lattice Grid still"></a>
+<a href="frames/circuit_square_t045.jpg"><img src="frames/circuit_square_t045.jpg" width="24%" alt="Lattice Grid still"></a>
+<a href="frames/eye_foil_t065.jpg"><img src="frames/eye_foil_t065.jpg" width="24%" alt="Lattice Grid still"></a>
+<a href="frames/eye_foil_wide_t065.jpg"><img src="frames/eye_foil_wide_t065.jpg" width="24%" alt="Lattice Grid still"></a>
+</p>
 
----
+## Start here
+
+From the repo root, inside a virtual environment:
+
+```bash
+pip install -r engines/lattice-grid/src/requirements.txt
+```
+
+```python
+import sys; sys.path.insert(0, "engines/lattice-grid/src")
+from lg import lattice, config
+
+for kind in ("square", "honeycomb", "triangular"):
+    L = lattice.build(kind, 1080, 1920, config.SOURCE_PITCH)
+    print(f"{kind:12s} {len(L.sites):5d} sites  {len(L.edges):6d} edges")
+```
+
+```
+square        5858 sites   22957 edges
+honeycomb     5252 sites    7771 edges
+triangular    7140 sites   21063 edges
+```
+
+Swapping geometry is one argument. Adding a new one means a `Lattice` subclass that provides
+sites, edges, edge kinds and a box sampler, and nothing downstream changes.
+`src/tools/lattice_check.py` verifies the substrate: coordination numbers, link-stamp lengths
+against real edge lengths, and that a box really is a closed ring.
 
 ## The format in one paragraph
 
@@ -57,6 +98,11 @@ reference as time series and look for a peak away from lag zero. It was never ru
 colour was assumed to be per-element from the start. **On any reference footage, check for
 channel-level temporal structure before modelling colour spatially.**
 
+I spent three sessions building an elaborate two-scale hue field with a calibrated bimodal
+palette before working this out, and all of it was fitting the shadow. If you ever
+reverse-engineer footage, cross-correlate the R, G and B channels as time series first and look
+for a peak away from lag zero. It's twenty lines, and it would have saved me a week.
+
 ## The glitch is a LAYER, and the network is the subject
 
 Two structural corrections worth carrying over.
@@ -77,30 +123,6 @@ the delay instead and it displaces all three channels together, giving grey rect
 **The CHAIN is the unit that lights, not the node.** Every node and edge in a chain shares one
 schedule, so a circuit energises as a whole. Per-element independent flicker reads as noise
 precisely because nothing is connected to anything.
-
-## Quick start
-
-```bash
-pip install -r src/requirements.txt   # numpy, Pillow, scipy
-```
-
-```python
-import sys; sys.path.insert(0, "src")
-from lg import lattice, config
-
-for kind in ("square", "honeycomb", "triangular"):
-    L = lattice.build(kind, 1080, 1920, config.SOURCE_PITCH)
-    print(f"{kind:12s} {len(L.sites):5d} sites  {len(L.edges):6d} edges")
-```
-
-```
-square       5858 sites   22957 edges
-honeycomb    5252 sites    7771 edges
-triangular   7140 sites   21063 edges
-```
-
-`src/tools/lattice_check.py` verifies the substrate's invariants — coordination number, link-stamp
-lengths against real edge lengths, and that a box is a closed ring.
 
 ## Every check is necessary and none is sufficient
 
@@ -210,3 +232,13 @@ rather than an error.
 - **Three of the four check suites**, for the reason above.
 - **Audio.** Content already re-rolls on a beat grid, so a real track's beat should drive it
   directly rather than a constant — but nothing is wired up.
+
+---
+
+<div align="center">
+
+**Using this?** Keep the header at the top of any file you copy, and credit the repo:
+[how to credit](../../README.md#use-it-in-your-own-stuff).<br>
+[← All engines](../README.md) · [Front page](../../README.md)
+
+</div>
