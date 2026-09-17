@@ -1,0 +1,21 @@
+name: Which engine made this?
+description: Saw a video and want to know what made it (or how to make something like it)?
+title: "Which engine made: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the gallery on the [front page](https://github.com/ec175/spectrometry_public#find-the-engine-behind-a-video) first. If it isn't there, ask away!
+  - type: input
+    id: link
+    attributes:
+      label: Link to the video
+      placeholder: https://www.instagram.com/reel/...
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you hoping to make?
+      description: Optional, but it helps me point you at the right piece.

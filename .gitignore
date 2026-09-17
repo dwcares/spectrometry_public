@@ -3,6 +3,8 @@
 renders/
 renders_*/
 media/
+# ...except the site's preview clips, which the READMEs and the Pages site show
+!docs/media/
 *.mp4
 *.mov
 *.mkv

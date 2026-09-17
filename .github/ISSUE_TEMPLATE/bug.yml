@@ -1,0 +1,34 @@
+name: Something broke
+description: An engine crashed, installed badly, or made something that looks wrong.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Which part?
+      options:
+        - Wind Tunnel
+        - Field Lines
+        - Lattice Grid
+        - Shape Physics
+        - Attractors
+        - Oscilloscope
+        - Chemical Scope
+        - Academia
+        - Chemical Profiles (manim)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What did you run, and what happened?
+      description: Paste the command or code and the full error message.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Your setup
+      placeholder: Windows 11, Python 3.12, NVIDIA RTX 3060 (or no GPU)

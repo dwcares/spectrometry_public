@@ -1,811 +1,206 @@
-# spectrometry_public
+<div align="center">
 
-**Rendering profiles, and simulated object libraries used in my videos**
+<img src="docs/media/hero.webp" width="100%" alt="spectrometry.mp4: looping clips from six of the engines - a wind tunnel, electric field lines, a strange attractor, an oscilloscope, a circuit lattice and a molecule on a CRT">
 
-[![YouTube](https://img.shields.io/badge/YouTube-spectrometry.mp4-red)](https://www.youtube.com/channel/UChtdNI2BC1SmkmHEERA4dzg)
-[![Instagram](https://img.shields.io/badge/Instagram-@spectrometry.mp4-E4405F)](https://instagram.com/spectrometry.mp4)
-[![X](https://img.shields.io/badge/X-@spectrometrymp4-black)](https://x.com/spectrometrymp4)
+### The code behind the [spectrometry.mp4](https://instagram.com/spectrometry.mp4) videos
 
----
+Fluid sims, field lines, particle swarms, bouncing shapes and molecules.<br>
+Written in Python, turned into video with ffmpeg. Free to use.
 
-## Getting started
+[![Instagram](https://img.shields.io/badge/Instagram-@spectrometry.mp4-E4405F?logo=instagram&logoColor=white)](https://instagram.com/spectrometry.mp4)
+[![YouTube](https://img.shields.io/badge/YouTube-spectrometry.mp4-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/channel/UChtdNI2BC1SmkmHEERA4dzg)
+[![X](https://img.shields.io/badge/X-@spectrometrymp4-000000?logo=x&logoColor=white)](https://x.com/spectrometrymp4)<br>
+[![License: MIT](https://img.shields.io/badge/license-MIT-2ea44f)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](#try-one-in-five-minutes)
+[![GPU optional](https://img.shields.io/badge/GPU-optional-76B900?logo=nvidia&logoColor=white)](#questions)
 
-Grab the repo:
+</div>
+
+Hey! If you got here from one of my videos, you're in the right place. Nothing on the channel is
+animated by hand: a real simulation runs, and every frame it produces goes straight into the video.
+This repo is where I share the engines that do that, so you can pull them apart and make your own
+things with them.
+
+## Find the engine behind a video
+
+Tap the one that looks like what you saw.
+
+<p align="center">
+<a href="engines/wind-tunnel/README.md"><img src="docs/media/wind-tunnel.webp" width="32%" alt="Wind Tunnel: three airfoils shedding vortices, coloured by flow speed"></a>
+<a href="engines/field-lines/README.md"><img src="docs/media/field-lines.webp" width="32%" alt="Field Lines: glowing blue electric field lines around moving charges"></a>
+<a href="engines/lattice-grid/README.md"><img src="docs/media/lattice-grid.webp" width="32%" alt="Lattice Grid: a honeycomb of tiny coloured circuit symbols flickering to a beat"></a>
+<a href="engines/shape-physics/README.md"><img src="docs/media/shape-physics.webp" width="32%" alt="Shape Physics: balls breaking out of a spinning pink ring"></a>
+<a href="engines/attractors/README.md"><img src="docs/media/attractors.webp" width="32%" alt="Attractors: a Lorenz butterfly drawn by thousands of glowing particles"></a>
+<a href="engines/oscilloscope/README.md"><img src="docs/media/oscilloscope.webp" width="32%" alt="Oscilloscope: a green phosphor rose pattern on a simulated CRT"></a>
+<a href="engines/chemical-scope/README.md"><img src="docs/media/chemical-scope.webp" width="32%" alt="Chemical Scope: serotonin and its FTIR spectrum drawn on a green CRT"></a>
+<a href="chemical_profiles/README.md"><img src="docs/media/chemical-profiles.webp" width="32%" alt="Chemical Profiles: caffeine with its FTIR spectrum, animated in manim"></a>
+<a href="engines/academia/README.md"><img src="docs/media/academia.webp" width="32%" alt="Academia: stacked simulated spectra for a whole class of molecules"></a>
+</p>
+
+### Not public yet
+
+These made some of my newer videos, but their code isn't cleaned up for sharing yet. They'll
+show up here when it is. Follow along on
+[Instagram](https://instagram.com/spectrometry.mp4) in the meantime.
+
+<p align="center">
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/gas-lab.webp" width="32%" alt="Gas Lab (not public yet): gas molecules compressed and ignited inside an engine cylinder"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/orbital-lab.webp" width="32%" alt="Orbital Lab (not public yet): a glowing electron orbital morphing between shapes"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/plume-lab.webp" width="32%" alt="Plume Lab (not public yet): three rocket exhaust plumes with shock diamonds"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/mechanics-board.webp" width="32%" alt="Mechanics Board (not public yet): a physics problem drawn and solved on white paper"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/cinematic.webp" width="32%" alt="Cinematic (not public yet): a title card over a swirling blue field"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/elements.webp" width="32%" alt="Elements (not public yet): the carbon tile from the 118 element series"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/field-notes.webp" width="32%" alt="Field Notes (not public yet): creatures swimming through a living blue ecosystem"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/bio-lab.webp" width="32%" alt="Bio Lab (not public yet): a colony of glowing green and yellow cells"></a>
+<a href="https://instagram.com/spectrometry.mp4"><img src="docs/media/cow-launch.webp" width="32%" alt="Cow Launch (not public yet): a cow riding a rocket plume into the sky"></a>
+</p>
+
+Seen a video that isn't on either list?
+[Ask which engine made it](https://github.com/ec175/spectrometry_public/issues/new?template=which-engine.yml).
+
+## Try one in five minutes
+
+You need **Python 3.10 or newer** and **[ffmpeg](https://ffmpeg.org/download.html)**. A GPU
+makes things faster, but nothing needs one.
 
 ```bash
 git clone https://github.com/ec175/spectrometry_public.git
 cd spectrometry_public
+python -m venv .venv
 ```
 
-You need **Python 3.10 or newer** and **ffmpeg** on your PATH. That is genuinely it for most of
-what is here. A CUDA GPU makes some things about ten times faster but nothing requires one, and
-every GPU path falls back to CPU on its own if the card is missing or busy.
+Turn the environment on. On Windows that's `.venv\Scripts\activate`; on macOS or Linux it's
+`source .venv/bin/activate`. Then pick one:
 
-Checking ffmpeg is there:
+**🎬 Make a full video right now.** [Chemical Profiles](chemical_profiles/README.md) is a finished
+scene: one molecule, its spectra, about ten minutes from a fresh clone.
 
 ```bash
-ffmpeg -version
-```
-
-If that fails, grab a build from [ffmpeg.org](https://ffmpeg.org/download.html) and put it on your
-PATH. On Windows the gyan.dev full builds work fine. You can also drop `ffmpeg.exe` into a `bin/`
-folder next to whichever engine you are running and it will be found there.
-
-### Then pick a direction
-
-There are two halves to this repo and they are independent.
-
-**Want to render something right now?** Go to [`chemical_profiles/`](chemical_profiles/). It is a
-finished manim scene with one molecule already set up, and it makes a video in about ten minutes
-starting from a fresh clone. Instructions are a few paragraphs down.
-
-**Want the pieces to build your own thing?** Go to [`engines/`](engines/). Eight libraries covering
-fluid flow, field lines, particle swarms, bouncing rigid bodies, a simulated CRT screen, and
-publication figures. Each one works on its own, each lists everything it can make, and each comes
-with sample images so you can see what you are getting before you install anything.
-
-The [full catalogue](CATALOG.md) lists all 193 objects and 83 compositions in one place if you want
-to browse.
-
-```mermaid
-flowchart LR
-    A["<b>chemical_profiles/</b><br/>manim scene"] --> R["<b>vertical video</b><br/>1080 × 1920"]
-    subgraph E ["engines/ — seven render libraries"]
-        direction TB
-        W["wind-tunnel<br/><i>two fluid solvers</i>"]
-        F["field-lines<br/><i>vector fields</i>"]
-        L["lattice-grid<br/><i>circuit lattices</i>"]
-        S["shape-physics<br/><i>rigid bodies</i>"]
-        T["attractors<br/><i>chaotic flows</i>"]
-        O["oscilloscope<br/><i>CRT + film filter</i>"]
-        C["chemical-scope<br/><i>29 molecules</i>"]
-    end
-    E -->|"numpy frames → ffmpeg"| R
-    D["<b>engines/academia</b><br/>figure generation"] --> P["<b>PDF / PNG</b><br/>publication figures"]
-```
-
-### Repo layout
-
-```
-chemical_profiles/     the manim scene, ready to render
-engines/               eight libraries, each with src/ frames/ and a catalogue
-  academia/            publication figures for compound classes
-  attractors/          strange-attractor particle swarms
-  chemical-scope/      29 molecules on a simulated CRT
-  field-lines/         electrostatics, potential flow, magnetostatics
-  lattice-grid/        illuminated circuit lattices
-  oscilloscope/        the CRT itself, plus its film and glitch filters
-  shape-physics/       discs, shells, destructible structures
-  wind-tunnel/         two fluid solvers
-tools/                 catalogue generator
-CATALOG.md             everything, indexed
-```
-
----
-
-## Render a chemical profile
-
-A vertical short showing one molecule and the spectra that identify it. The structure spins over
-its ¹³C and ¹H NMR spectra with the peaks numbered to match the atoms, cross-fades to an FTIR
-trace, then plays each infrared vibration mode while a cursor tracks the band it produces.
-
-```bash
+pip install -r chemical_profiles/requirements.txt
 cd chemical_profiles
-
-python -m venv .venv
-source .venv/bin/activate         # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-manim -qh -r 1080,1920 chemical_profile.py VerticalProfile_Aspirin
+manim -ql -r 540,960 chemical_profile.py VerticalProfile_Aspirin
 ```
 
-That is the full-quality render and it takes a while. For a fast look, swap `-qh` for `-ql`. Your
-video lands in `chemical_profiles/renders/videos/chemical_profile/1920p30/`.
-
-**You do not need LaTeX.** This trips people up because most manim projects require it. These
-scenes use Pango text throughout instead of `MathTex`, so you can skip the entire MiKTeX or TeX
-Live install that the manim docs walk you through.
-
-### Adding your own molecule
-
-One subclass. Every molecule-specific value is a class attribute, and `VerticalProfile_Aspirin` is
-the template. Read it top to bottom and you have seen the whole data contract.
-
-[**GUIDE.md**](chemical_profiles/GUIDE.md) covers installing from scratch, what every quality flag
-actually does, how to read the output tree, authoring a molecule attribute by attribute, and what
-to do when something breaks.
-
-### About the spectra
-
-They are representative, not measured. Peak positions come from literature values and
-group-contribution estimates, hand-corrected so the diagnostic bands land where they should. Good
-enough to teach with. Not a substitute for running the instrument.
-
-If you author a molecule, check every shift and every band against a reference before you render.
-Nothing in the code validates them, and a wrong assignment is a factual error sitting on screen in
-front of whoever watches it.
-
----
-
-# The engines
-
-Seven of these compute something real, in numpy, and pipe raw frames straight to ffmpeg. No scene
-graph, no timeline, no manim. The eighth makes the publication figures the whole thing grew out of.
-
-They are published as **parts**, not as finished videos. You get the solvers, the shape generators,
-the field maths, the physics, the colour maps, the post filters, and the render pipeline that runs
-all of it. What you do not get is my `scenes.py` files, which is where the finished compositions
-live. That is deliberate — I would rather hand over the toolbox than a button that re-makes my own
-videos.
-
-Every composition is still listed, with a note on what it shows and a still from it, because the
-idea is usually the useful part even when the code is not.
-
-| engine | in one line |
-|---|---|
-| [Wind Tunnel](#wind-tunnel) | real 2-D fluid dynamics, two solvers |
-| [Field Lines](#field-lines) | field lines of any closed-form vector field |
-| [Lattice Grid](#lattice-grid) | illuminated circuit lattices with a strange colour model |
-| [Shape Physics](#shape-physics) | bouncing shapes, and audio the simulation triggers |
-| [Attractors](#attractors) | chaotic flows drawn by particle density |
-| [Oscilloscope](#oscilloscope) | a simulated CRT and a very good film filter |
-| [Chemical Scope](#chemical-scope) | 29 molecules with FTIR and Raman, on that CRT |
-| [Academia](#academia) | stacked spectra figures for whole compound classes |
-
----
-
-## Wind Tunnel
-
-[Catalogue](engines/wind-tunnel/CATALOG.md) · [Stills](engines/wind-tunnel/frames/) ·
-[Source](engines/wind-tunnel/src/) · [Full notes](engines/wind-tunnel/README.md)
-
-Actual computational fluid dynamics driving a colour-field animation. Two solvers share one
-interface:
-
-`lbm.py` is a D2Q9 lattice-Boltzmann scheme with a Smagorinsky turbulence model. It gives you free
-bodies the flow genuinely pushes around, sealed containers, and coloured dye transport, and it is
-fast. One collision-and-streaming step, over nine discrete velocities $\mathbf{c}_i$:
-
-$$
-f_i\!\left(\mathbf{x}+\mathbf{c}_i\,\Delta t,\; t+\Delta t\right)\;=\;f_i(\mathbf{x},t)\;-\;\frac{\Delta t}{\tau}\Big[\,f_i(\mathbf{x},t)-f_i^{\mathrm{eq}}(\rho,\mathbf{u})\,\Big]
-$$
-
-The relaxation time $\tau$ carries whatever viscosity you asked for, $\tau=\tfrac{1}{2}+3\nu$ with
-$\nu=u_0 L/\mathrm{Re}$, and the Smagorinsky term raises it locally wherever the strain rate is
-high. Note that $\tau=\tfrac{1}{2}$ is a hard floor, so Reynolds number and resolution are not
-independent dials: raise $\mathrm{Re}$ without adding cells and you run out of margin.
-
-`cns.py` is a compressible Navier-Stokes solver with MUSCL reconstruction and an HLLC Riemann
-solver. Real ideal gas at $\gamma = 1.4$, so you get temperature, internal energy, and honest shock
-capture. It is validated against the exact Sod shock-tube solution and against the
-$\theta$–$\beta$–$M$ oblique-shock relation, and both of those checks ship with it.
-
-Nothing on screen is keyframed. A scene can put a shape somewhere, choose what a free body is made
-of, or push the fluid, and then it has to let go. Every vortex, every separation bubble, every
-tumbling plate is the solver's answer.
-
-### Getting started
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r engines/wind-tunnel/src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "engines/wind-tunnel/src")
-import numpy as np
-from wt import lbm, shapes
-
-sim  = lbm.LBM(nx=240, ny=420, u0=0.06, re=800)
-foil = shapes.place(shapes.naca4("2412"), chord=90, cx=120, cy=140, aoa_deg=8)
-sim.set_solid(shapes.rasterize([foil], 240, 420))
-sim.run(400)
-
-print(f"stability {sim.health():.3f}, peak speed {np.abs(sim.ux).max():.4f}")
-```
-
-Bodies are boolean masks rasterised from polygons every step, so there is no meshing anywhere. You
-can move them, rotate them, or change their shape mid-clip and nothing downstream notices.
-
-There are 18 shape generators including NACA sections, cylinders, plates, wedges, a jet-engine
-cross-section, a surfboard, and a cow. `image_body()` traces a polygon straight out of a PNG alpha
-channel, so anything you can draw becomes a solid the fluid flows around.
-
-### Watch out for
-
-**`u0` means two different things.** Under the lattice-Boltzmann solver it is a lattice velocity
-and lives around 0.02 to 0.10. Under the compressible solver it is a Mach number. The lattice
-sound speed is $c_s=1/\sqrt{3}$, so the same symbol differs by a factor of $\sqrt{3}$ between them:
-
-$$
-\text{LBM:}\quad \mathrm{Ma}=\frac{u_0}{c_s}=u_0\sqrt{3}
-\qquad\qquad
-\text{CNS:}\quad u_0 \equiv \mathrm{Ma}
-$$
-
-A comfortable value in one is catastrophic in the other, and this is the single easiest way to
-waste an hour here.
-
-**Buy speed with `steps`, never with `u0`.** Apparent speed is the product
-
-$$v_{\text{apparent}} \;=\; u_0 \times \texttt{steps per frame}$$
-
-so both dials look identical on screen — but only one of them is bounded. Raising $u_0$ is what
-breaks solves; running more steps costs wall clock and nothing else.
-
-**Size bodies against the screen, not against a lattice axis.** Which axis is "across the picture"
-flips with the flow direction, and a chord quoted in the wrong one comes out about three times too
-big.
-
-The [engine README](engines/wind-tunnel/README.md) has nine hard rules for moving bodies, each of
-which is a bug I already hit and fixed.
-
----
-
-## Field Lines
-
-[Catalogue](engines/field-lines/CATALOG.md) · [Stills](engines/field-lines/frames/) ·
-[Source](engines/field-lines/src/) · [Full notes](engines/field-lines/README.md)
-
-Field lines and streamlines of any closed-form vector field, drawn as neon polylines with packets
-riding along them. Electrostatics, potential flow, and magnetostatics all come out of the same
-integrator, because a field here is just a callable.
-
-Nothing solves a PDE. Every field is a closed form evaluated at an array of points, so there is no
-lattice, no timestep, no CFL condition, and nothing can blow up.
-
-The step is in **arclength**, not time, and it is constant. Every seed advances by dividing out the
-field's magnitude, so the integrator walks the direction field at unit speed:
-
-$$
-\frac{d\mathbf{p}}{ds}\;=\;\frac{\mathbf{E}(\mathbf{p})}{\lVert\mathbf{E}(\mathbf{p})\rVert}
-\qquad\Longrightarrow\qquad
-\left\lVert \frac{d\mathbf{p}}{ds} \right\rVert = 1
-$$
-
-That one divide buys two things. Line density comes out uniform instead of piling up wherever the
-field is weak. And because every vertex is now exactly $\Delta s$ from the last, a packet moving at
-speed $v$ is no longer an integration at all — it is an array index,
-
-$$k \;=\; \operatorname{round}\!\left(\frac{v\,t}{\Delta s}\right)$$
-
-which is why the entire pulse module is a hundred lines with no integration in it at all.
-
-### Getting started
-
-```bash
-pip install -r engines/field-lines/src/requirements.txt
-```
-
-```python
-import sys; sys.path.insert(0, "engines/field-lines/src")
-import numpy as np
-from fl import field, lines
-
-charges = field.ChargeSet().set([(0., 0.), (0., 300.)], [6.0, -2.0])
-seeds   = lines.seed_ring((0., 0.), r0=40., n_max=48)
-
-pts, length, ended = lines.trace(
-    charges, seeds, ds=6.0, n_steps=440,
-    sinks=charges.sinks(), capture_r=16.0,
-    bounds=(-540., 540., -960., 960.))
-
-for code, name in enumerate(lines.END_NAMES):
-    print(f"{name:8s} {np.count_nonzero(ended == code)}")
-```
-
-Swap `charges` for a `PotentialFlow` and every line above still runs unchanged. That is the whole
-design.
-
-### Reading the output
-
-Every line records how it ended, and those counts are your diagnostic:
-
-| code | meaning |
-|---|---|
-| `sink` | captured by a negative source, the normal fate |
-| `null` | stalled at a saddle point, legitimate |
-| `bounds` | left the frame, legitimate |
-| `BUDGET` | ran out of arclength. **This is a bug.** |
-| `loop` | closed or spiralling, only possible for vortex fields |
-
-Do not raise `n_steps` to make `BUDGET` go away. It means your capture radius is smaller than your
-step size, so lines are stepping straight over their own sinks, or your bounds are wrong.
-
-One result worth knowing before you build a potential flow: one doublet per body is only exact for
-an isolated body. Two cylinders in one flow each violate the other's boundary condition, badly. Use
-one cylinder plus Milne-Thomson images of everything else, which is exact for arbitrary external
-flow. That took the worst surface-normal velocity from 0.81 down to 0.0005.
-
----
-
-## Lattice Grid
-
-[Catalogue](engines/lattice-grid/CATALOG.md) · [Stills](engines/lattice-grid/frames/) ·
-[Source](engines/lattice-grid/src/) · [Full notes](engines/lattice-grid/README.md)
-
-A fixed lattice of nodes and connectors lit by a moving field. The lattice never moves. What
-changes is the content sitting on it, which re-rolls on the musical beat, and the illumination
-sweeping across.
-
-The interesting part is the colour, which is not a palette at all. The render is black and white,
-and every colour you see comes from **delaying the RGB channels against each other**: blue
-undelayed, green about 0.1 s behind, red about 0.2 s. An element appearing shows blue first and
-reads cyan. One fading still has its red after the newer channels have gone and reads orange.
-Anything steady has all three channels equal and comes out white.
-
-I spent three sessions building an elaborate two-scale hue field with a calibrated bimodal palette
-before working this out. All of it was fitting the shadow. If you ever reverse-engineer footage,
-cross-correlate the R, G and B channels as time series first and look for a peak away from lag
-zero. It is twenty lines and it would have saved me a week.
-
-### Getting started
-
-```bash
-pip install -r engines/lattice-grid/src/requirements.txt   # numpy, Pillow, scipy
-```
-
-```python
-import sys; sys.path.insert(0, "engines/lattice-grid/src")
-from lg import lattice, config
-
-for kind in ("square", "honeycomb", "triangular"):
-    L = lattice.build(kind, 1080, 1920, config.SOURCE_PITCH)
-    print(f"{kind:12s} {len(L.sites):5d} sites  {len(L.edges):6d} edges")
-```
-
-```
-square        5858 sites   22957 edges
-honeycomb     5252 sites    7771 edges
-triangular    7140 sites   21063 edges
-```
-
-Swapping geometry is one class attribute. Adding a new one means a `Lattice` subclass providing
-sites, edges, edge kinds and a box sampler, and nothing downstream changes.
-
-`tools/lattice_check.py` verifies the substrate: coordination numbers, stamp lengths against real
-edge lengths, and that a box is actually a closed ring.
-
-### Watch out for
-
-**Bloom is the enemy of this look.** A halo averages many elements, so it changes slowly even when
-the ink underneath is switching hard. Slow-changing means white, and white is the one thing a
-colour-delay effect cannot afford.
-
-**Density controls brightness, not exposure.** A clipped pixel is white by definition. Keep
-exposure low and get brightness from coverage instead.
-
-**Grain sets your bitrate.** Per-frame noise is incompressible, so encode cost here is almost
-entirely down to the grain setting. The usual 40 Mbit ceiling destroys about half of it, and what
-h.264 leaves behind is correlated blocking rather than independent noise. Use cq 17 at 70 Mbit.
-
----
-
-## Shape Physics
-
-[Catalogue](engines/shape-physics/CATALOG.md) · [Stills](engines/shape-physics/frames/) ·
-[Source](engines/shape-physics/src/) · [Full notes](engines/shape-physics/README.md)
-
-Discs, spinning shells with gaps, destructible brick rings, plinko pins, pendulums, gears. The
-satisfying-shapes format.
-
-The audio relationship here runs backwards compared to everything else I have built. Normally a
-song gets analysed into a band track and the render reads it. Here **the simulation fires events
-and the events decide when the song plays**.
-
-The rule that makes it work: each event plays the next half-second of the song, and an event
-arriving while a segment is already sounding *extends* that segment rather than retriggering it.
-Most videos of this kind retrigger, so two events a few frames apart either stack two copies of the
-sample or hard-cut back to its start. Extending means an extended segment is one continuous read of
-the song. No overlap, no abrupt stop while events keep arriving.
-
-### Getting started
-
-```bash
-pip install numpy pillow   # that is the whole dependency list
-```
-
-```python
-import sys; sys.path.insert(0, "engines/shape-physics/src")
-from sim import world, build, audio
-
-obstacles  = build.polygon_shell(540, 960, 210, n_sides=6,
-                                 thickness=14., missing=(0,), omega=1.2)
-obstacles += build.walls(60, 1020, 100, 1820)
-
-w = world.World(obstacles, cx=540, cy=960, width=1080, height=1920,
-                gravity=1500., initial=1)
-for _ in range(2 * 900):          # 2 seconds at the 900 Hz physics rate
-    w.step(1 / 900.)
-
-print(f"{len(w.bounces)} bounces, {len(w.triggers)} headline events")
-
-score = audio.Score(slice_len=0.5)
-for t in (1.0, 1.2, 3.0):
-    score.fire(t)
-print(f"{len(score.segments)} segments from 3 events")   # 2, the first two merged
-```
-
-**Run the simulation with no drawing before you render anything.** It takes about a third of a
-second for a twenty-second clip and it prints your escape counts, every trigger time, and the
-resulting audio segments. Tune gap width, spin, friction and gravity against that. Never against
-renders.
-
-Three primitives build everything: a `Ring` (hollow shell with gaps), a `Capsule` (a segment swept
-by a disc, which becomes polygons, funnels, chutes, spirals, paddles, pendulums and bricks), and a
-`Peg` (a disc, optionally orbiting, optionally with restitution above 1 so it is a real energising
-bumper). They all resolve through the same two functions, so they interact correctly with each
-other for free.
-
-### Watch out for
-
-**Bounces resolve in the wall's frame.** A spinning shell has to *fling* a ball, not just stop it.
-Set friction to zero, or do the reflection in the world frame, and balls rattle to the bottom and
-sit there waiting for a gap.
-
-**A gap must clear the ball, not a point.** A ball of radius *r* at shell radius *R* needs
-`2·asin(r/R)` of arc just to fit through.
-
-**Read spin rates against your clip length.** I once shipped a hexagon whose one missing side
-passed the bottom of frame every 11 seconds, so in a 15-second clip the ball just sat and waited.
-Seven escapes became zero.
-
-**A rotating spiral is an Archimedes screw and only one sign conveys outward.** Measured over 15
-seconds: one direction gave 16 escapes, the other gave zero.
-
----
-
-## Attractors
-
-[Catalogue](engines/attractors/CATALOG.md) · [Stills](engines/attractors/frames/) ·
-[Source](engines/attractors/src/) · [Full notes](engines/attractors/README.md)
-
-Forty thousand particles integrated through a chaotic flow at once. Nothing is traced. The picture
-is built entirely by where particles crowd. Lorenz, Rössler, Thomas, Halvorsen, Chen and Aizawa all
-ship; the Lorenz system is the familiar one,
-
-$$
-\dot{x}=\sigma\,(y-x),\qquad
-\dot{y}=x\,(\rho-z)-y,\qquad
-\dot{z}=xy-\beta z
-$$
-
-A single orbit shows you the *shape* of an attractor. A swarm shows you its **invariant measure** —
-how much of its time the system actually spends in each part of that shape,
-
-$$
-\mu(A)\;=\;\lim_{T\to\infty}\frac{1}{T}\int_{0}^{T}\mathbf{1}_{A}\big(\mathbf{x}(t)\big)\,dt
-$$
-
-which the renderer approximates by histogramming the swarm. So the bright regions are not artistic
-emphasis — brightness *is* occupancy, and it is where the dynamics dwell.
-
-It is also cheap. RK4 on an (N,3) array costs the same four function calls as RK4 on one point, so
-the particles are essentially free next to the rasteriser.
-
-### Getting started
-
-```bash
-pip install numpy scipy pillow
-```
-
-```python
-import sys; sys.path.insert(0, "engines/attractors/src")
-from at import core, draw
-
-print("flows:   ", sorted(core.FLOWS))
-print("palettes:", sorted(draw.PALETTES))
-
-s = core.Swarm("lorenz", n=42000, seed=1)
-s.step(1 / 60.)
-print(f"{s.P.shape[0]} particles, mean speed {s.speed().mean():.1f}")
-```
-
-Six flows ship: lorenz, rossler, aizawa, halvorsen, thomas, chen. Adding one is a vectorised
-`f(P) -> dP/dt` plus a row in a dict, and nothing else changes.
-
-Every palette is built monotone in luminance, because colour here always encodes a real quantity
-(speed, drift, distance from the manifold, age). You should be able to read "more" from "brighter"
-without a legend.
-
-### Two things that are easy to get wrong
-
-**Seeding.** Particles started in a random ball are all off the attractor, and their approach
-transients are long, bright, and identical-looking. Your first second becomes a collapsing shell
-that has nothing to do with the dynamics. Seed along a reference orbit with a little scatter
-instead.
-
-**Recycling.** Chaotic flows contract volume, so an un-recycled swarm collapses onto a thin
-filament within seconds and you lose every part of the attractor the trajectory is not on right
-now. Respawn a few percent per second and the whole measure stays lit.
-
-There is a nice trick in here for morphing between attractors: interpolate the **derivative**, not
-the picture. `dP/dt = (1-u)·f_A(P) + u·f_B(P)`. Because you are blending the vector fields, every
-intermediate is a real dynamical system with its own trajectories, so the swarm is never teleported
-and never cross-faded. You get to watch a Lorenz butterfly stretch into a Halvorsen knot through a
-sequence of attractors nobody has ever named.
-
----
-
-## Oscilloscope
-
-[Catalogue](engines/oscilloscope/CATALOG.md) · [Stills](engines/oscilloscope/frames/) ·
-[Source](engines/oscilloscope/src/) · [Full notes](engines/oscilloscope/README.md)
-
-A simulated CRT screen. The electron beam is stroked into an intensity layer each frame and added
-to a float buffer that decays a little every frame, exactly like real P31 green phosphor:
-
-$$P_{n+1} \;=\; \underbrace{\alpha\,P_{n}}_{\text{phosphor decay}} \;+\; I_{n+1},\qquad 0<\alpha<1$$
-
-That single decay factor is what produces the orbiting ghost trails — the screen remembers, and how
-long it remembers is one number. Beam intensity also goes as the reciprocal of how fast the spot is
-travelling,
-
-$$I \;\propto\; \left\lVert \frac{d\mathbf{r}}{dt} \right\rVert^{-1}$$
-
-so the beam dwells at the turning points and Lissajous corners glow the way they do on real
-hardware. Neither of those is a drawing trick; they are the two things a phosphor screen does.
-
-Three layers you can use independently.
-
-**The screen** is the persistence buffer and the graticule. It is RGB rather than grayscale so
-traces can be any colour, and the graticule crossfades between cartesian, radial, and a faint axis
-cross.
-
-**The film filter** models filming that screen with a camera, in three stages, in the order light
-actually goes through the system. Screen: glass halation, phosphor grain in lit areas only, dust
-and smudges that light up under the trace. Lens: barrel distortion, per-channel chromatic
-aberration, corner defocus, vignette, sub-pixel hand-shake. Camera: exposure flicker, a drifting
-hum band, highlight blowout, tinted black lift, sensor noise.
-
-**The glitch layer** models a bad acquisition, split so signal faults land before the film pass
-(and get filmed) while sensor defects land after it.
-
-### The filter works on anything
-
-This is the most immediately useful thing in the repo. It needs nothing else from here:
+**📺 Put the CRT look on your own clip.** The [Oscilloscope](engines/oscilloscope/README.md) film
+filter works on any video you already have.
 
 ```bash
 pip install -r engines/oscilloscope/src/requirements.txt
-
-python engines/oscilloscope/src/filter_cli.py in.mp4 out.mp4 --glitch 0.8
+python engines/oscilloscope/src/filter_cli.py your_clip.mp4 filmed.mp4 --glitch 0.8
 ```
 
-Point it at any video. It probes size and frame rate, streams decode to process to encode, and
-copies the source audio window across. About 0.8 is subtle, 1.8 is heavy. The
-[`test_filmtest_*` stills](engines/oscilloscope/frames/) are a before/after set at three strengths
-if you want to see the range before committing.
+**🧪 Play with a simulation.** Every engine page starts with a short **Start here** section you
+can paste straight into Python. [Wind Tunnel](engines/wind-tunnel/README.md#start-here) is a
+good first one.
 
-### Using the screen directly
+## Use it in your own stuff
 
-```python
-import sys; sys.path.insert(0, "engines/oscilloscope/src")
-import numpy as np
-from osc import scope, config, crtfilm
+**Anyone can use this code**, for videos, school projects, your own engine, whatever you like.
+It's [MIT licensed](LICENSE). The only thing I ask is that you **leave a trail back here**:
 
-cfg = config.RenderConfig(width=1080, height=1920)
-sc  = scope.Scope(cfg)
+1. **Keep the two-line header** at the top of any file you copy. The license needs it anyway.
+2. **Credit it** in your project's README or your video's description:
+   ```
+   Made with spectrometry.mp4 engines by Ethan Earl - github.com/ec175/spectrometry_public
+   ```
+3. **Or add the badge:**
+   [![made with spectrometry.mp4 engines](https://img.shields.io/badge/made%20with-spectrometry.mp4%20engines-ffc440?labelColor=0b0f14)](https://github.com/ec175/spectrometry_public)
+   ```markdown
+   [![made with spectrometry.mp4 engines](https://img.shields.io/badge/made%20with-spectrometry.mp4%20engines-ffc440?labelColor=0b0f14)](https://github.com/ec175/spectrometry_public)
+   ```
 
-sc.new_frame()                                    # decay the phosphor
-t = np.linspace(0, 2 * np.pi, 900)
-sc.beam(np.stack([np.sin(3 * t), np.cos(2 * t)], 1) * 0.8, gain=0.5)
-rgb = sc.render(grid_state=2)                     # 2 = faint axis cross, -1 = none
+If you post something you made, tag [@spectrometry.mp4](https://instagram.com/spectrometry.mp4).
+I'd love to see it.
 
-look = crtfilm.FilmLook(1080, 1920, 60, 900, seed=7,
-                        **crtfilm.film_config_for_phosphor((0, 255, 80)))
-frame = look.process(rgb, 0)
-```
+> **Using an AI coding agent?** Point it at [`AGENTS.md`](AGENTS.md). It explains how the repo
+> fits together and how to credit it. For a formal citation, use
+> [`CITATION.cff`](CITATION.cff) (on desktop, it's the **Cite this repository** button).
 
-`film_config_for_phosphor()` derives the filter's colour behaviour from your trace colour. Blowout
-keys off the lit channels and bleeds into the deficient ones, so any hue blows to white and the
-blacks tint toward it. It is cheap enough to call every frame, which means a colour-changing scene
-needs no filter tuning at all.
+## Questions
 
-### Watch out for
+<details>
+<summary><b>Do I need a GPU?</b></summary>
+<br>
 
-**Filter exposure defaults to 1.75**, which is right for a thin bright trace on black. A
-full-frame bright image needs about 0.72 or the whole thing goes pastel and your blacks turn grey.
-Full-colour content also wants a neutral white phosphor config, not the green defaults.
+No. Every engine runs on a normal CPU. If you have an NVIDIA card, the engines that support it
+use it automatically for the maths (CuPy) and the video encoding (NVENC), and quietly fall back to
+the CPU if anything is missing. All the timings in these docs came from one RTX 2060 with an
+i7-9700K, so read them as rough ratios.
 
-**Flashed overlays must use the transient buffer.** Persistence burns a static bright shape in for
-most of a second of decay. There is a separate `beam_transient()` for anything that appears and
-vanishes.
+</details>
 
-**60 fps traces read fainter than a 30 fps preview**, because a shorter arc is drawn per frame so
-less light accumulates per lap. Judge brightness at the frame rate you are shipping.
+<details>
+<summary><b>Do I need LaTeX?</b></summary>
+<br>
 
-There is also a video-to-ASCII front end in here, which maps luminance to a glyph while keeping
-the source pixel colour, and feeds the result through the same film filter.
+No. Most manim projects do, but the chemical profile scenes use plain text rendering (Pango)
+everywhere, so you can skip the whole LaTeX install.
 
----
+</details>
 
-## Chemical Scope
+<details>
+<summary><b>Why can't I re-make your exact videos?</b></summary>
+<br>
 
-[Catalogue](engines/chemical-scope/CATALOG.md) · [Stills](engines/chemical-scope/frames/) ·
-[Source](engines/chemical-scope/src/) · [Full notes](engines/chemical-scope/README.md)
+The engines are the toolbox. The `scenes.py` files that arrange them into my finished videos
+stay with me, because I'd rather hand you the parts than a button that copies my channel. Every
+composition I've made is still listed in each engine's catalogue, with stills, because the idea is
+usually the useful bit.
 
-Twenty-nine molecules, each with an FTIR and a Raman spectrum, drawn on that CRT. Molecule above,
-spectrum below. This is the chemical profile format remade after I dropped manim.
+</details>
 
-The two methods are genuinely different, which took real work. Same band positions, reweighted by
-selection rules: IR intensity goes with change in dipole moment, so carbonyls and C-O are strong,
-while Raman goes with change in polarisability, so C=C and ring breathing are strong. The Raman
-legend is the same diagnostic modes reordered by Raman strength, so the handover visibly re-ranks
-what matters instead of just redrawing.
+<details>
+<summary><b>Can I make horizontal video?</b></summary>
+<br>
 
-### Getting started
+Yes. Everything is written for vertical 1080×1920 because that's what I post, but the aspect
+ratio lives in each engine's `RenderConfig`, never in the physics. Wind Tunnel even has a
+`right` flow direction for the classic landscape tunnel.
 
-```bash
-pip install -r engines/chemical-scope/src/requirements.txt
-```
+</details>
 
-```python
-import sys; sys.path.insert(0, "engines/chemical-scope/src")
-from chemical_data import MOLECULES
+<details>
+<summary><b>Are the spectra real measurements?</b></summary>
+<br>
 
-print(len(MOLECULES), "molecules")
-m = MOLECULES["Morphine"]
-print(f"{len(m['AT'])} atoms, {len(m['BONDS'])} bonds, {len(m['ir_lines'])} IR lines")
-```
+No. They're representative simulations: peak positions come from literature values and
+group-contribution estimates, so they're good for learning and for video, but not for citing.
+Check against a real reference before you trust any band.
 
-```bash
-cd engines/chemical-scope/src
-python chemical_profile.py Morphine --preview     # one molecule, fast
-python render_optimal.py                          # the whole set, three GPU lanes
-```
+</details>
 
-`render_optimal.py` splits every molecule into frame chunks and work-steals them across three GPU
-lanes, so idle lanes pick up the next chunk and the tail stays balanced. Concatenation comes out
-seamless because each chunk warms the phosphor first and the film filter is indexed on absolute
-frame number with a fixed seed.
+<details>
+<summary><b>Something broke. What now?</b></summary>
+<br>
 
-### Adding a molecule
+[Open an issue](https://github.com/ec175/spectrometry_public/issues/new?template=bug.yml) with
+the command you ran and the full error. Most problems are either ffmpeg missing from your PATH or
+two engines sharing one virtual environment (use one per engine; Academia needs `numpy<2`).
 
-One entry in the `MOLECULES` dict. Geometry can be typed by hand or generated from SMILES; either
-way you hand-author the IR lines and diagnostic bands from the functional groups.
+</details>
 
-Nine of the twenty-nine are 3-D and rotate to show depth. If one of yours moves badly, the problem
-is almost always orientation rather than motion: something with a small ring or a non-flat face
-swings edge-on and the labels collide. Orient by the whole-molecule principal plane instead of the
-aromatic ring and it settles down. That fix took one molecule's depth spread from 6.2 to 3.1.
-
-Validate the formula. The generator checks each molecule's computed molecular formula against a
-known value, which is cheap and catches a mistyped bond immediately.
-
-### About the spectra
-
-Illustrative. Group-contribution positions with a heuristic Raman reweight. Positions are sound,
-relative intensities are approximate, and only about 600 to 1900 cm⁻¹ is shown. Do not cite them.
-For the same chemistry done properly, [Academia](#academia) has the real parsers and the DFT paths.
-
----
-
-## Academia
-
-[Catalogue](engines/academia/CATALOG.md) · [Figure previews](engines/academia/figures/) ·
-[Source](engines/academia/src/) · [Full notes](engines/academia/README.md)
-
-The figure code behind the PDF deliverables. Give it a compound class as a set of SMILES and it
-produces a publication figure: every molecule in the class stacked as a simulated spectrum, with
-its structure drawn beside it, as a vector PDF.
+<details>
+<summary><b>What's in each folder?</b></summary>
+<br>
 
 ```
-SMILES  ->  RDKit structure + functional groups
-        ->  group-contribution line list
-        ->  broadened to a curve, per technique
-        ->  stacked with structures inset  ->  vector PDF
+engines/             one folder per engine: README, catalogue, stills, source
+chemical_profiles/   a finished manim scene, the quickest way to a full video
+docs/                the website, plus the preview clips on this page
+tools/               rebuilds the catalogues and the stills pages
+AGENTS.md            instructions for AI coding agents
 ```
 
-The estimator is what makes this feasible at all. A DFT job per molecule per technique would be
-weeks of compute for one figure. A group-contribution prediction takes milliseconds and gets the
-band positions right, which is what a class-comparison figure is actually asking about.
+</details>
 
-### Getting started
+## More
 
-```bash
-pip install -r engines/academia/src/requirements.txt   # RDKit, matplotlib, numpy<2, scipy
+- **[All engines](engines/README.md)**: every engine on one page, plus the rules they all follow
+- **[Full catalogue](engines/CATALOG.md)**: 193 objects and 83 compositions, indexed
+- **[Chemical Profiles guide](chemical_profiles/GUIDE.md)**: from install to your own molecule
+- **[Website](https://ec175.github.io/spectrometry_public/)**: the same gallery, as a page you can share
 
-cd engines/academia/src
-python amino_acid_sim_test.py
-```
-
-```
-4 stacked PDFs in .../figures/amino_acids
-```
-
-Seven scripts produce 84 PDFs across six compound classes plus the BCS drug set. Read
-`amino_acid_sim_test.py` first, it is the reference implementation and it is under 170 lines. Copy
-`extra_classes_sim_test.py` if you are adding a class of your own.
-
-Every class has its own natural pairing, and choosing it is the interesting design decision:
-
-| class | paired as |
-|---|---|
-| amino acids, lipids, neurotransmitters, peptides, steroids | crystalline against amorphous |
-| cannabinoids | neutral against acid |
-| lipids | free acid against salt |
-| neurotransmitters | freebase against protonated |
-| peptides | reduced against oxidised |
-| steroids | free against ester |
-
-### Watch out for
-
-**Axis direction.** FTIR runs 4000 to 400 cm⁻¹ and NMR runs high to low ppm. Raman, UV and XRD all
-run low to high. It is a single boolean argument and getting it wrong gives you a figure that is
-subtly, embarrassingly backwards.
-
-**Line shape is physics, not preference.** Vibrational bands are Lorentzian. Electronic bands are
-Gaussian *in energy*, which is why UV broadening happens in eV and gets mapped back to nm rather
-than broadened in wavelength. Powder reflections are pseudo-Voigt.
-
-**DFT harmonic frequencies run high** and need a scaling factor: about 0.967 for
-B3LYP/6-311++G(2d,3p), about 0.95 for wB97XD/6-31G*.
-
-Measured data is not part of this repo. `registry.py` fetches from wherever `SPECTRA_DATA_URL`
-points, and the simulated figure scripts need no network at all.
-
-### The manim subproject
-
-[`engines/academia/manim/`](engines/academia/manim/) holds the older animated work: crystal
-structures, morph sequences, the isoxazole series, and the render drivers. It is where the chemical
-profile format came from originally. The library itself lives in
-[`chemical_profiles/`](chemical_profiles/) rather than here, since that copy ships with a worked
-scene and a guide.
-
----
-
-# Things that apply everywhere
-
-**Previews are trustworthy.** Every engine drives its frames from real seconds (`t = i/fps`), so a
-half-resolution preview at 30 fps and a full-resolution final at 60 fps are the same animation,
-sampled differently. Iterate on previews.
-
-**Encodes are atomic.** Everything writes to `<name>.part.mp4` and renames only on success, so a
-file bearing its final name is always finished and playable. A stray `.part.mp4` is safe to delete
-on sight.
-
-**GPU encoding is on by default** behind a one-time probe with an automatic libx264 fallback, so a
-missing or busy encoder slows a render instead of killing it. Each engine has an environment
-variable to force CPU if you want it.
-
-**Three concurrent renders is the ceiling** on consumer hardware. GeForce NVENC only allows three
-to five simultaneous sessions, and going wider gets you nothing.
-
-**Orientation is your choice.** All of this was written for vertical 1080×1920 because that is what
-I publish, but none of it is limited to that. The vertical framing lives in a `RenderConfig` and in
-the geometry a composition picks, never in a solver or a field or a physics module. Wind Tunnel
-solves in wind coordinates and only the renderer decides which axis is the long one, so
-`--flow right` at a wide config gives you the classic landscape tunnel view. Field Lines,
-Attractors and Lattice Grid compute in normalised coordinates and do not know what an aspect ratio
-is. Shape Physics works in reference pixels with a scale factor. The two CRT engines size the
-screen face as a fraction of the frame. Academia is matplotlib, so page size is a figure argument.
-
-Every number measured in this repo came off one machine, an RTX 2060 with an i7-9700K. Treat the
-timings as ratios rather than promises.
-
-## Maintaining the catalogues
-
-`engines/<name>/catalog.json` is the source of truth. The markdown beside it and the root index are
-both generated:
-
-```bash
-python tools/build_catalogs.py
-```
-
-Edit the JSON, never the generated `CATALOG.md`.
-
----
-
-## Legal
-
-Privacy Policy and Terms of Service for the publishing automation, served via GitHub Pages and
-referenced by the social-platform developer apps:
-
-- <https://ec175.github.io/spectrometry_public/privacy.html>
-- <https://ec175.github.io/spectrometry_public/terms.html>
-
-## License and use
-
-Personal project, shared so the method is reproducible. The rendered videos are not part of this
-repository. If you build on it, a credit is appreciated.
+<div align="center">
+<br>
+<sub>Made by Ethan Earl · <a href="https://instagram.com/spectrometry.mp4">@spectrometry.mp4</a> · <a href="LICENSE">MIT</a></sub>
+</div>
