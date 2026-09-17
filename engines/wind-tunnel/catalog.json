@@ -87,7 +87,7 @@
       ]
     }
   ],
-  "scenes_intro": "The compositions themselves are not in this repository — see the README. They are listed because the list is the useful part: each one is a different answer to what you can point this solver at, and each has frames beside it. `rocket_engine` is withheld at the author's request.",
+  "scenes_intro": "The compositions themselves are not in this repository — see the README. They are listed because the list is the useful part: each one is a different answer to what you can point this solver at, and each has frames beside it. `rocket_engine` is held back on purpose.",
   "scenes": [
     {"name": "aoa_sweep", "what": "A NACA section swept both ways through stall: +stall, cross over, -stall, back to neutral.", "status": "shipped 15 s", "frames": ["aoa_sweep_t035.jpg", "aoa_sweep_t075.jpg"]},
     {"name": "aoa_sweep_fast", "what": "The same section and the same sweep schedule, in a tunnel run twice as fast.", "status": "shipped", "frames": ["aoa_sweep_fast_t035.jpg", "aoa_sweep_fast_t075.jpg"]},

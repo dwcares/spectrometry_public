@@ -102,7 +102,7 @@ The legitimate ways to push the fluid. All of them are things a real rig has.
 
 ## Compositions
 
-The compositions themselves are not in this repository — see the README. They are listed because the list is the useful part: each one is a different answer to what you can point this solver at, and each has frames beside it. `rocket_engine` is withheld at the author's request.
+The compositions themselves are not in this repository — see the README. They are listed because the list is the useful part: each one is a different answer to what you can point this solver at, and each has frames beside it. `rocket_engine` is held back on purpose.
 
 | composition | what it does | status | frames |
 |---|---|---|---|

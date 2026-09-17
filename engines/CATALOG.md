@@ -2,6 +2,8 @@
 
 # Catalogue index
 
+[← front page](../README.md) · [engine gallery](README.md)
+
 Every object in this repository, grouped by the engine that makes it. Each engine's own `CATALOG.md` carries the parameters, ranges and the notes on what breaks if you change them.
 
 
@@ -9,19 +11,19 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 | engine | what it makes | catalogue |
 |---|---|---|
-| [Wind Tunnel](engines/wind-tunnel/) | A real 2-D fluid solver driving a colour-field animation — nothing on screen is keyframed. | 37 objects, 35 compositions, 59 frames |
-| [Field Lines](engines/field-lines/) | Field lines and streamlines of a closed-form vector field, integrated in arclength. | 17 objects, 5 compositions, 15 frames |
-| [Lattice Grid](engines/lattice-grid/) | A fixed lattice of nodes and connectors whose content re-rolls on the beat, lit by a moving field. | 18 objects, 8 compositions, 16 frames |
-| [Shape Physics](engines/shape-physics/) | Rigid-body-lite simulation for 'satisfying shapes' clips — and audio the simulation triggers, rather than the other way round. | 20 objects, 13 compositions, 27 frames |
-| [Attractors](engines/attractors/) | Tens of thousands of particles integrated through a strange-attractor flow at once — the picture is where they crowd. | 18 objects, 5 compositions, 14 frames |
-| [Oscilloscope](engines/oscilloscope/) | A simulated CRT screen — a phosphor persistence buffer, a film-off-a-real-screen filter, and a glitch layer. | 17 objects, 17 compositions, 57 frames |
-| [Chemical Scope](engines/chemical-scope/) | Twenty-nine molecules, each with an FTIR and a Raman spectrum, drawn as a CRT oscilloscope screen. | 39 objects, 58 frames |
-| [Academia](engines/academia/) | The figure code behind the PDF deliverables — stacked simulated spectra for whole compound classes, with structures drawn alongside. | 27 objects, 90 frames |
+| [Wind Tunnel](wind-tunnel/) | A real 2-D fluid solver driving a colour-field animation — nothing on screen is keyframed. | 37 objects, 35 compositions, 60 frames |
+| [Field Lines](field-lines/) | Field lines and streamlines of a closed-form vector field, integrated in arclength. | 17 objects, 5 compositions, 16 frames |
+| [Lattice Grid](lattice-grid/) | A fixed lattice of nodes and connectors whose content re-rolls on the beat, lit by a moving field. | 18 objects, 8 compositions, 17 frames |
+| [Shape Physics](shape-physics/) | Rigid-body-lite simulation for 'satisfying shapes' clips — and audio the simulation triggers, rather than the other way round. | 20 objects, 13 compositions, 28 frames |
+| [Attractors](attractors/) | Tens of thousands of particles integrated through a strange-attractor flow at once — the picture is where they crowd. | 18 objects, 5 compositions, 15 frames |
+| [Oscilloscope](oscilloscope/) | A simulated CRT screen — a phosphor persistence buffer, a film-off-a-real-screen filter, and a glitch layer. | 17 objects, 17 compositions, 58 frames |
+| [Chemical Scope](chemical-scope/) | Twenty-nine molecules, each with an FTIR and a Raman spectrum, drawn as a CRT oscilloscope screen. | 39 objects, 59 frames |
+| [Academia](academia/) | The figure code behind the PDF deliverables — stacked simulated spectra for whole compound classes, with structures drawn alongside. | 27 objects, 91 frames |
 
 
 ## Wind Tunnel
 
-[README](engines/wind-tunnel/README.md) · [catalogue](engines/wind-tunnel/CATALOG.md) · [frames](engines/wind-tunnel/frames/) · [source](engines/wind-tunnel/src/)
+[README](wind-tunnel/README.md) · [catalogue](wind-tunnel/CATALOG.md) · [stills](wind-tunnel/frames/README.md) · [source](wind-tunnel/src/)
 
 
 **Shape generators** — `naca4`, `circle`, `square`, `plate`, `wedge`, `wedge_rev`, `ellipse`, `teardrop`, `turbofan`, `surfboard`, `board_texture`, `cow`, `metaball`, `image_body`, `place`, `rasterize`
@@ -41,7 +43,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Field Lines
 
-[README](engines/field-lines/README.md) · [catalogue](engines/field-lines/CATALOG.md) · [frames](engines/field-lines/frames/) · [source](engines/field-lines/src/)
+[README](field-lines/README.md) · [catalogue](field-lines/CATALOG.md) · [stills](field-lines/frames/README.md) · [source](field-lines/src/)
 
 
 **Field kernels** — `coulomb`, `ChargeSet`, `PotentialFlow`, `wires`
@@ -61,7 +63,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Lattice Grid
 
-[README](engines/lattice-grid/README.md) · [catalogue](engines/lattice-grid/CATALOG.md) · [frames](engines/lattice-grid/frames/) · [source](engines/lattice-grid/src/)
+[README](lattice-grid/README.md) · [catalogue](lattice-grid/CATALOG.md) · [stills](lattice-grid/frames/README.md) · [source](lattice-grid/src/)
 
 
 **Lattice geometries** — `SquareLattice`, `HexLattice (honeycomb)`, `HexLattice (triangular)`
@@ -81,7 +83,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Shape Physics
 
-[README](engines/shape-physics/README.md) · [catalogue](engines/shape-physics/CATALOG.md) · [frames](engines/shape-physics/frames/) · [source](engines/shape-physics/src/)
+[README](shape-physics/README.md) · [catalogue](shape-physics/CATALOG.md) · [stills](shape-physics/frames/README.md) · [source](shape-physics/src/)
 
 
 **Primitives** — `Ring`, `Capsule`, `Peg`, `Ball`
@@ -101,7 +103,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Attractors
 
-[README](engines/attractors/README.md) · [catalogue](engines/attractors/CATALOG.md) · [frames](engines/attractors/frames/) · [source](engines/attractors/src/)
+[README](attractors/README.md) · [catalogue](attractors/CATALOG.md) · [stills](attractors/frames/README.md) · [source](attractors/src/)
 
 
 **Flows** — `lorenz`, `rossler`, `aizawa`, `halvorsen`, `thomas`, `chen`
@@ -121,7 +123,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Oscilloscope
 
-[README](engines/oscilloscope/README.md) · [catalogue](engines/oscilloscope/CATALOG.md) · [frames](engines/oscilloscope/frames/) · [source](engines/oscilloscope/src/)
+[README](oscilloscope/README.md) · [catalogue](oscilloscope/CATALOG.md) · [stills](oscilloscope/frames/README.md) · [source](oscilloscope/src/)
 
 
 **The CRT core** — `Scope`, `beam`, `beam_transient`, `head`, `graticule states`
@@ -141,7 +143,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Chemical Scope
 
-[README](engines/chemical-scope/README.md) · [catalogue](engines/chemical-scope/CATALOG.md) · [frames](engines/chemical-scope/frames/) · [source](engines/chemical-scope/src/)
+[README](chemical-scope/README.md) · [catalogue](chemical-scope/CATALOG.md) · [stills](chemical-scope/frames/README.md) · [source](chemical-scope/src/)
 
 
 **Format machinery** — `ChemScope`, `power-on intro`, `method handover`, `line playhead`, `symbol knockout`, `text flare`, `billboard rock`, `multi-axis tumble`, `principal-plane orientation`, `IR-to-Raman reweighting`
@@ -164,7 +166,7 @@ Every object in this repository, grouped by the engine that makes it. Each engin
 
 ## Academia
 
-[README](engines/academia/README.md) · [catalogue](engines/academia/CATALOG.md) · [frames](engines/academia/figures/) · [source](engines/academia/src/)
+[README](academia/README.md) · [catalogue](academia/CATALOG.md) · [stills](academia/figures/README.md) · [source](academia/src/)
 
 
 **Figure scripts — the deliverables** — `amino_acid_sim_test.py`, `amino_acid_crystal_vs_amorphous_test.py`, `cannabinoid_sim_test.py`, `extra_classes_sim_test.py`, `bcs_sim_test.py`, `examples.py`, `example_overlay.py`
