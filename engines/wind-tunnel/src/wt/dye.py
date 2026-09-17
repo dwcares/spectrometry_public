@@ -1,9 +1,11 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """dye.py — passive coloured species advected by the flow (D2Q5 BGK, one lattice per species).
 
 WHY THIS EXISTS. Every field this project has drawn so far is a function of the velocity field:
 speed, vorticity, pressure. That is enough to say *how fast* fluid is moving and never enough to
-say *which fluid it is*. Ethan, 2026-08-03, asking for the rocket: *"noticibly different colored
-fluids in tanks that expand and push thrust downward."* Two propellants that stay distinct down
+say *which fluid it is*. When I asked for the rocket (2026-08-03), the request was for
+noticeably different-coloured fluids in tanks that expand and push thrust downward. Two propellants that stay distinct down
 their own tanks, meet, and mix is a statement about material identity, so it needs a transported
 scalar. Painting the tanks two colours would have been a lie the moment the fluid left them.
 
@@ -27,7 +29,7 @@ about sqrt(2 D t) ~ 4.5 cells. That is a soft edge, not a blur.
 
 Species are stored as one (K, 5, ny, nx) array and stepped together, so K species cost K times
 the memory but not K times the kernel launches — which is what actually matters on this GPU
-(see AGENT_GUIDE section 4: this workload is launch-bound, not bandwidth-bound).
+(this workload is launch-bound, not bandwidth-bound).
 """
 from __future__ import annotations
 

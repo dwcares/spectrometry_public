@@ -1,9 +1,11 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """rig.py - articulated deformation of a body, for the outline AND its texture.
 
 Every body in this project has been RIGID: a scene may put a polygon somewhere at time t, and
 `shapes.place` scales, rotates and translates the whole thing. That is enough for a foil in a rig
 and for a free body being pushed around, and it is not enough for an animal, which was the point
-of Ethan's note on the animated cow (2026-08-05): *"DO not just rotate the head"*. Rotating the
+of my note on the animated cow (2026-08-05): do not just rotate the head. Rotating the
 head polygon rigidly detaches it from the neck; what a neck does is BEND.
 
 THE MODEL: a BEND FIELD - each point is rotated about the bone's pivot by its own share of the

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """content.py - WHAT sits on the lattice, and when it changes.
 
 The mechanism this whole project turns on, and the thing that took measuring to find:
@@ -18,7 +20,7 @@ generated once at construction (iterating from beat 0) and cached - ~30 beats of
 arrays is under a megabyte, and it keeps `--still 7.5` byte-identical to frame 450 of a
 render.
 
-Glyph vocabulary, read off the source at native resolution (CLAUDE.md S2):
+Glyph vocabulary, read off the source at native resolution:
 
     EMPTY 0   most cells
     DOT   1   small filled circle

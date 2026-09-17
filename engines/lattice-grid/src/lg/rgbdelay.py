@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """rgbdelay.py - the colour.
 
 The creator's own account, confirmed by measurement: the render was **black and white**, and

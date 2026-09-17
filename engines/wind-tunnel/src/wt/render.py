@@ -1,4 +1,6 @@
-"""render.py ââ‚¬â€ the pipeline: solve -> colourise -> streaks -> body -> film -> ffmpeg.
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
+"""render.py — the pipeline: solve -> colourise -> streaks -> body -> film -> ffmpeg.
 
 manim-free, same shape as Oscilloscope's render.py: this module owns the clock and the rawvideo
 pipe, and nothing else knows about video.
@@ -21,7 +23,7 @@ Timebase
 --------
 `cfg.steps` is LBM steps per frame **at cfg.fps_ref (60) fps**, and the renderer scales it by
 fps_ref/fps with a fractional accumulator. That is what makes a 30 fps preview and a 60 fps
-final show the *same flow at the same moment* instead of one running at double speed ââ‚¬â€ the same
+final show the *same flow at the same moment* instead of one running at double speed — the same
 "frames driven by real seconds" rule the Oscilloscope engine uses.
 """
 from __future__ import annotations
@@ -370,7 +372,7 @@ class Tunnel:
         few percent of a 1080x1920 picture, but allocating two full-frame 2x images (2160x3840
         'L' each) and box-resizing them every frame cost ~230 ms — 41% of total frame time, more
         than the entire fluid solve. Cropping to the bodies makes it ~10 ms for pixel-identical
-        output. (Measured with scratch/profile_render.py; see CLAUDE.md "Render performance".)
+        output. (Measured directly.)
         """
         cfg = self.cfg
         if not self._polys:
@@ -691,7 +693,7 @@ def _load_font(px):
 
 # --- drivers ----------------------------------------------------------------------------
 def render_stills(scene, cfg: RenderConfig, times, out_png):
-    """Dump a PNG at each time in `times` from ONE simulation run ââ‚¬â€ the tuning loop. Re-simulating
+    """Dump a PNG at each time in `times` from ONE simulation run — the tuning loop. Re-simulating
     from t=0 for every sample would dominate iteration time; the flow is causal, so we just tap it
     as it goes past. `out_png` gets `_<t>s` appended when more than one time is asked for."""
     times = sorted(float(t) for t in times)

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """chemscope.py — CRT-scope "chemical profile" compositor (molecule above, spectrum trace below).
 
 A manim-free remake of the vertical chemical-profile format, drawn as an oscilloscope screen:
@@ -102,7 +104,7 @@ class ChemScope:
     motion = "rock"
     TUMBLE = dict(ampx=32.0, ampy=48.0, ampz=16.0, fx=0.0725, fy=0.0515, fz=0.0322,
                   phx=1.7, phz=0.6, base_rot=-8.0)
-    # vertical layout (fractions of h). 2026-07-25 (Ethan): the molecule NAME title moved OUT of
+    # vertical layout (fractions of h). 2026-07-25 (design note): the molecule NAME title moved OUT of
     # the top block down to `title_y`, so it sits directly ABOVE the method title ("FTIR SPECTRUM"
     # / "RAMAN SPECTRUM") — name and method read as one stacked heading. The top block is now just
     # the two metadata subtitles (pulled up into the vacated slot), so the molecule gets a taller

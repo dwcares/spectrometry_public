@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """chemical_data.py — molecule + spectrum data for the CRT-scope "chemical profile" format.
 
 Transcribed 1:1 from the manim VerticalProfile_* subclasses in
@@ -791,7 +793,7 @@ MOLECULES = {
         size=dict(target_w_frac=0.56, sym_px=48),
     ),
     "Alprazolam": dict(
-        title="XANAX",                        # brand name on screen (Ethan 2026-07-25)
+        title="XANAX",                        # brand name on screen (design note, 2026-07-25)
         sub1="C17H13ClN4  |  308.77 g/mol  |  m.p. 228 C",
         sub2="Triazolobenzodiazepine . GABA-A modulator . Sched. IV",
         sub_ftir="logP +3.49  |  TPSA 40.3 A^2  |  sol. 0.04 g/L",

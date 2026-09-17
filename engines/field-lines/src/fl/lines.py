@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """lines.py - the field-line integrator. This is the core of the project.
 
     dp/ds = E(p) / |E(p)|      RK4, CONSTANT arclength step ds
@@ -14,7 +16,7 @@ THREE decisions here are load-bearing. Each is a bug if it is "simplified" away:
 2. EVERY LINE IS INTEGRATED IN LOCKSTEP, NOT ONE AT A TIME.
    The state is an (N,2) array and the loop is over the arclength index. A per-line Python loop
    turns ~450 vector ops into ~90k scalar-ish ones and costs about 50x. Same launch-bound
-   lesson as Wind_Tunnel AGENT_GUIDE section 4 and Shape_Physics rule 5 - the work is tiny, the
+   lesson learned in other engines in this project - the work is tiny, the
    per-call overhead is not.
 
 3. LINES ARE COMPACTED AS THEY DIE.

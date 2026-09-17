@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """audio.py - EVENT-TRIGGERED progressive song playback, plus decode/mux.
 
 `decode_*` and `mux_track` are ported from Oscilloscope\\osc\\audio.py (which was itself

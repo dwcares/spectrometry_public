@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """eye.py - the IMAGE the lattice is asked to draw.
 
 A detailed, deliberately NON-SPHERICAL eye: the outline is an almond built from two different
@@ -9,7 +11,7 @@ It returns THREE fields per point, because the lattice has three independent thi
 with them, and using all three is what produces depth on a flat grid:
 
     lit    (N,) [0,1]   how bright this point should be
-    conn   (N,) [0,1]   how strongly nodes here want to be CONNECTED. Ethan's note: bright
+    conn   (N,) [0,1]   how strongly nodes here want to be CONNECTED. My note: bright
                         regions should be more wired-up. Iris > sclera, and the limbal ring is
                         the most connected line in the picture.
     layer  (N,) [-1,1]  a DEPTH coordinate, fed to the holofoil as a hue offset. The sclera

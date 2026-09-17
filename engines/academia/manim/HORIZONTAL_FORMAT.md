@@ -1,6 +1,6 @@
 # Horizontal (16:9) spectroscopy format — the current standard
 
-**Reference implementation:** [`pat_raman_scene.py`](pat_raman_scene.py) (class `PATRaman`).
+**Reference implementation:** `pat_raman_scene.py` (class `PATRaman`, not published here).
 **Render:** `.\render_pat_raman.ps1 -Quality h` → `Chemistry\Methods_Manim\PAT_Raman\`.
 
 This supersedes the **old** landscape format (the method-template scenes in

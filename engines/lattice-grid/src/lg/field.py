@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """field.py - the ILLUMINATION field and the PALETTE field.
 
 Two smooth functions of (position, time) evaluated at the lattice sites. Together they are

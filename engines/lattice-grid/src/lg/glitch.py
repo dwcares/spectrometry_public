@@ -1,6 +1,8 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """glitch.py - the glitch is a LAYER OVER the picture, not a property of the nodes.
 
-Ethan: "the glitch is not associated with the nodes... it seems to be placed over the video,
+My note: "the glitch is not associated with the nodes... it seems to be placed over the video,
 and has the color delays" - and then, decisively: "glitches need to be synced and be the same
 size (three displaced identical glitches, all different colors corresponding to color delay)."
 
@@ -21,7 +23,7 @@ The earlier version re-rolled size AND position together and used blocks up to 2
 frame, which produced huge unrelated rectangles instead of a synced triple.
 
 Blocks brighten what they cover rather than replacing it: a glitch momentarily ILLUMINATES
-the dark lattice underneath, which is the part of the effect Ethan wanted kept. The same idea
+the dark lattice underneath, which is the part of the effect I wanted kept. The same idea
 is applied to the network itself in `network.py` (`border_flash`).
 """
 from __future__ import annotations
@@ -81,6 +83,6 @@ class Glitch:
                     out = mono.copy()
                 blk = out[y:y + bh, x:x + bw]
                 # BRIGHTEN, do not replace: the glitch lights up whatever dark lattice it
-                # lands on, which is the behaviour Ethan asked to keep.
+                # lands on, which is the behaviour I asked to keep.
                 np.maximum(blk, blk * (1.0 + g) + self.lift * g, out=blk)
         return mono if out is None else out

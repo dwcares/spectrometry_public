@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """shapes.py — the bodies placed in the tunnel, as closed polygons in LATTICE coordinates.
 
 Every body is just an ordered closed polygon. The solver only ever sees a rasterised boolean
@@ -87,11 +89,11 @@ def cow(scale_y=1.0):
 
     Why a single loop and not a body plus four legs: the solver only ever sees a rasterised
     mask, and separate polygons that nearly touch leave sub-cell cracks the lattice cannot
-    represent (CLAUDE.md section 6 rule 4). Tracing the whole animal in one circuit - over the
+    represent (the no-sub-cell-gaps rule). Tracing the whole animal in one circuit - over the
     back, down the tail, then weaving down and up each leg along the underside - makes the mask
     one connected island by construction.
 
-    THE SILHOUETTE IS THE REQUIREMENT, exactly as it was for `turbofan` (AGENT_GUIDE 2a.29): a
+    THE SILHOUETTE IS THE REQUIREMENT, exactly as it was for `turbofan`: a
     physics check cannot fail on "does it read as a cow". So the proportions are set by what
     survives rasterisation at the ~119 cells of chord this scene gives it, not by anatomy:
 
@@ -123,7 +125,7 @@ def cow(scale_y=1.0):
         # -- thigh + hock, then the hind pair (rear leg first) ---------------------------
         # Every inter-leg gap below is >= 0.055 of the length, i.e. >= 6 cells at the ~119-cell
         # chord this is drawn at. That is not styling: a sub-cell passage is a channel the
-        # lattice cannot represent and the speed in it runs away (CLAUDE.md section 6 rule 4).
+        # lattice cannot represent and the speed in it runs away (the no-sub-cell-gaps rule).
         # A first pass drew anatomically thin legs 1.7 cells apart.
         (0.842, 0.030), (0.834, -0.072),
         (0.850, -0.150), (0.844, -0.230), (0.846, -0.300),
@@ -161,13 +163,13 @@ def surfboard(width=0.28, tail=0.36, tip=0.012, nose_p=0.70, x_n=0.12, n=240):
 
     `width` is the maximum width as a fraction of LENGTH. 0.28 is a real shortboard (a 6'2" x
     20" is 0.27); it is quoted rather than hardcoded because it is the single number that decides
-    how bluff this body is, and blockage is what sets peak `max|u|` in this project
-    (AGENT_GUIDE 2a.27). At +-34 deg a 0.28-wide board projects 0.28*cos34 + 1.0*sin34 = 0.792
+    how bluff this body is, and blockage is what sets peak `max|u|` in this project.
+    At +-34 deg a 0.28-wide board projects 0.28*cos34 + 1.0*sin34 = 0.792
     chords across the stream against a NACA 0015's 0.683 - i.e. **16% more blockage than the
     section it replaces**, which is why the tri-lane scene re-runs its own stability gate rather
     than inheriting one.
 
-    THE SILHOUETTE IS A REQUIREMENT, not a garnish (AGENT_GUIDE 2a.29 - a duct built out of
+    THE SILHOUETTE IS A REQUIREMENT, not a garnish (a duct built out of
     aerofoils IS two aerofoils, and no physics check can fail on "does it read as the thing").
     Four features carry the reading, and each is set by what survives rasterisation:
 
@@ -179,7 +181,7 @@ def surfboard(width=0.28, tail=0.36, tip=0.012, nose_p=0.70, x_n=0.12, n=240):
         zero-slope needle. And the tip is TRUNCATED at `tip` x the length rather than run to a
         point: a half-width that goes to zero is a sub-cell sliver, and the first mask drawn here
         came out as the body plus a DETACHED SPECK where the sliver crossed the 2x-supersampled
-        threshold and back. That is CLAUDE.md section 6 rule 4 in miniature - the same reason
+        threshold and back. That is the no-sub-cell-gaps rule in miniature - the same reason
         `cow`'s legs are drawn fatter than a real cow's and `image_body` welds at 1.5 cells. At
         0.012 the tip is 1.8 cells wide on the tri-lane lattice and 2.3 on the single-board one,
         and it is invisible at any size these clips are watched at. `mask_check` in
@@ -284,9 +286,9 @@ def turbofan(r_lip=0.175, r_throat=0.160, r_exit=0.105, r_out=0.330, r_spin=0.05
     THE SILHOUETTE IS THE POINT, and getting it wrong is what this shape exists to fix. The
     first version wrapped the NACA thickness law around the duct wall - a perfectly defensible
     way to build a cowl, which on screen looked like two airfoils facing each other, because
-    that is exactly what it was. Ethan, 2026-08-03: *"very confused on why its two airfoils...
-    even a simple jet engine block with a funnel at the end? ... do not leave an airfoil in the
-    video."* So this is built as the thing he asked for, and four features carry the reading:
+    that is exactly what it was. When I saw it (2026-08-03) it read as two airfoils rather than
+    a simple jet-engine block with a funnel at the end, and I asked that no airfoil be left in the
+    video. So this is built to fix that, and four features carry the reading:
 
       - **a thick-walled POD, not a thin cowl.** The wall is `r_out - r_throat` = 0.16 of the
         engine length against a duct radius of 0.14 - the solid is WIDER than the hole. This is
@@ -502,7 +504,7 @@ def image_body(path, cells=120.0, flip_x=False, close_cells=1.5, detail=3.0, alp
 
     THREE THINGS THIS HAS TO GET RIGHT, and each is a rule this project already learned:
 
-      - **No sub-cell gaps** (CLAUDE.md section 6 rule 4). A photographic cut-out has legs a few
+      - **No sub-cell gaps.** A photographic cut-out has legs a few
         pixels apart at the FINAL lattice size, and a passage narrower than a cell is one the
         lattice cannot represent - the speed in it runs away. So the mask is closed with a disk
         of `close_cells` LATTICE CELLS, which welds shut exactly the channels that would be

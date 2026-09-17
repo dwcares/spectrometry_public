@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """field.py - the vector fields. No PDE is ever solved in this project.
 
 Every field here is a CLOSED FORM evaluated at an array of query points. That is the whole

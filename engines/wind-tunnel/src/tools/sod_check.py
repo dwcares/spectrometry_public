@@ -1,10 +1,12 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """Does `wt\\cns.py` actually capture a shock, at the RIGHT place and the RIGHT strength?
 
 THE GATE FOR THE COMPRESSIBLE SOLVER. Everything the rewrite was for rests on the claim that this
 scheme resolves discontinuities correctly; that claim is checkable against an exact solution, so
 it gets checked before any of it is believed. This is the same principle as `calib.py` measuring
-Cd against a textbook 1.2 - and the reason it exists is AGENT_GUIDE 2a.1, where a force that
-looked completely plausible was wrong by a factor of 20 with an arbitrary sign, for a whole
+Cd against a textbook 1.2 - and the reason it exists is that a force that
+looked completely plausible was once wrong by a factor of 20 with an arbitrary sign, for a whole
 session, because nothing compared it to a known answer.
 
 The Sod shock tube is the standard case: a diaphragm at x=0.5 separating

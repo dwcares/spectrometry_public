@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """cannabinoid_sim_test.py — simulate FTIR/Raman/UV/1H-NMR for ~10 cannabinoids,
 then a second set overlaying each cannabinoid with its carboxylic-ACID variant.
 

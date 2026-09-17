@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """colormap.py — scalar field -> RGB, as a precomputed 256-entry LUT.
 
 Matching the source video: its speed field is plain **jet** — deep navy in the separated wake,
@@ -40,7 +42,7 @@ _STOPS = {
     # place the map has no red left. It ends on a hot ember instead.
     # FIRE, and note it is built on the OPPOSITE principle to `blues`. `blues` floors at an ink
     # blue rather than black because still water should still read as water. Here the brief is the
-    # reverse (Ethan, 2026-07-29): outside a hole's sphere of influence the frame should be BLACK,
+    # reverse (design note, 2026-07-29): outside a hole's sphere of influence the frame should be BLACK,
     # with the red concentrated at the rim. So this LUT floors at true black and stays near it for
     # the first fifth of the ramp, then climbs hard - all of the colour is spent on the top half,
     # which is where the driven ring lives. Pair it with a gamma ABOVE 1 (the scene uses 1.70) to
@@ -74,9 +76,9 @@ def _build(name):
 def _tone(lut8, sat, val):
     """Desaturate and/or dim a LUT. Identity at (1, 1), so nothing shipped moves by default.
 
-    Ethan has asked for this twice - "colors are way too saturated" on the original five, and
-    "the green color is very bright, is there any way that colors associated with the normal
-    windtunnel have reduced brightness" on `tri_shapes` (2026-08-04). Both complaints are about
+    I've asked for this twice - that the colours were way too saturated on the original five, and
+    that the green was too bright and needed reduced brightness against the normal wind-tunnel
+    palette on `tri_shapes` (2026-08-04). Both complaints are about
     the SAME thing and neither is a filter: it is `jet` itself. Its middle is where the two
     brightest primaries overlap - green-yellow around (128, 255, 128) carries a luminance of
     ~203 against pure red's 76 - so the freestream, which is the largest area in the frame, is

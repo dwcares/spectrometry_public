@@ -1,9 +1,11 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """atlas.py - the glyph stamps, baked once.
 
 The whole format is a few thousand copies of about eight small shapes. So bake each shape ONCE
 into an anti-aliased alpha stamp and composite copies of it additively, rather than asking
 Pillow to draw 3000 primitives per frame. Measured: ~2 ms/frame of splatting against ~1400
-ms/frame of per-glyph Pillow calls at 1080x1920 (CLAUDE.md S6).
+ms/frame of per-glyph Pillow calls at 1080x1920.
 
 Two things make this work and both are easy to get wrong:
 
@@ -17,7 +19,7 @@ Two things make this work and both are easy to get wrong:
    stamp serves every hue in the palette.
 
 Stamp geometry is quoted as a fraction of `pitch`, all measured off reel_51d5e4f3 rescaled to
-the 1080-wide reference frame (CLAUDE.md S2).
+the 1080-wide reference frame.
 """
 from __future__ import annotations
 

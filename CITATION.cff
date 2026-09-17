@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: >-
+  If you use these engines in a project, video, paper or class, please credit them
+  with a link back to https://github.com/ec175/spectrometry_public
+type: software
+title: "spectrometry.mp4 engines"
+abstract: >-
+  Python engines that turn real simulations into vertical video: 2-D fluid dynamics
+  (lattice-Boltzmann and compressible Navier-Stokes), field lines of electric and
+  magnetic fields, strange-attractor particle swarms, rigid-body shape physics with
+  simulation-triggered audio, a simulated CRT oscilloscope with a film filter, and
+  simulated FTIR, Raman, UV-Vis and NMR spectra for molecules.
+authors:
+  - given-names: Ethan
+    family-names: Earl
+    alias: spectrometry.mp4
+repository-code: "https://github.com/ec175/spectrometry_public"
+url: "https://ec175.github.io/spectrometry_public/"
+license: MIT
+keywords:
+  - scientific visualization
+  - computational fluid dynamics
+  - lattice Boltzmann
+  - spectroscopy
+  - generative art
+  - creative coding
+  - physics simulation
+  - python
+  - ffmpeg
+  - manim

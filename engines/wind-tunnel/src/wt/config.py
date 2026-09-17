@@ -1,8 +1,10 @@
-"""config.py ââ‚¬â€ render/solver config, ffmpeg resolution, encoder args.
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
+"""config.py — render/solver config, ffmpeg resolution, encoder args.
 
 Vertical 1080x1920 by default (these are shorts, same target as ``Oscilloscope``). The SOLVER
-runs in its own "wind coordinates" lattice ââ‚¬â€ x is ALWAYS the streamwise axis, y the cross-stream
-axis ââ‚¬â€ and `flow` only decides how that lattice is mapped onto the screen:
+runs in its own "wind coordinates" lattice — x is ALWAYS the streamwise axis, y the cross-stream
+axis — and `flow` only decides how that lattice is mapped onto the screen:
 
     flow="up"     streamwise -> screen VERTICAL (bottom to top).  lattice nx = H/scale, ny = W/scale
                   The default: a tall frame gives ~1920 px of downstream wake to develop in.
@@ -56,7 +58,7 @@ class RenderConfig:
     # --- lattice ---
     scale: float = 3.0              # screen px per lattice cell (3 -> 640x360 lattice @1080p).
                                     # --preview halves BOTH the frame size and this, so the
-                                    # lattice ââ‚¬â€ and therefore the physics ââ‚¬â€ is unchanged.
+                                    # lattice — and therefore the physics — is unchanged.
     u0: float = 0.10                # inlet speed in lattice units/step (keep <= 0.12: Mach limit)
     re: float = 6000.0              # Reynolds number based on the scene's reference length
     csm: float = 0.16               # Smagorinsky constant (LES closure; lets tau sit near 0.5)
@@ -121,7 +123,7 @@ class RenderConfig:
                                     # body, supplied by the scene's `arrows(t)` in LATTICE
                                     # coords. Opt-in, and deliberately so - the source clip this
                                     # project was built from had force arrows on its foil and
-                                    # Ethan disliked them (CLAUDE.md preamble), so no scene gets
+                                    # I disliked them, so no scene gets
                                     # them unless it is ABOUT them. `surf_wave` is.
 
     # --- legend ---
@@ -212,7 +214,7 @@ _NVENC_OK = None
 
 
 def _nvenc_available() -> bool:
-    """Probe h264_nvenc ONCE per process (256x256 test encode ââ‚¬â€ NVENC rejects tiny frames, don't
+    """Probe h264_nvenc ONCE per process (256x256 test encode — NVENC rejects tiny frames, don't
     shrink it). A missing/busy NVENC must degrade to libx264, never kill a render mid-pipe."""
     global _NVENC_OK
     if _NVENC_OK is None:

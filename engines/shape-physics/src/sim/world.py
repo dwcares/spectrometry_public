@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """world.py - the physics. Balls against a list of OBSTACLES.
 
 Deliberately small and float-based (no numpy in the inner loop - numpy scalar ops cost ~10x a
@@ -380,7 +382,7 @@ class World:
         # shapes an orbit, and stretching only the weak guides would leave gravity pulling
         # every orbit back to round. Bodies stay circular - only the field is anisotropic.
         self.aniso = float(aniso)
-        # ---- 2D -> 3D PLANE SEPARATION (Ethan 2026-07-30). Once every destructible segment is
+        # ---- 2D -> 3D PLANE SEPARATION (design note, 2026-07-30). Once every destructible segment is
         # gone, tiers stop intersecting: each tier is given a DEPTH offset and ball-ball contact
         # is tested in 3D. Two spheres separated by dz collide only when
         #     d_2d^2 < (ra+rb)^2 - dz^2
@@ -394,7 +396,7 @@ class World:
         self.t_break = None                     # when the last destructible segment fell
         self._destructibles = [o for o in self.obstacles if getattr(o, "hp0", -1) > 0]
         self.cross_passes = 0                   # cross-tier pairs that passed through
-        # ---- ANGLE RULE (Ethan 2026-07-30). Whether two spheres interact at all depends on how
+        # ---- ANGLE RULE (design note, 2026-07-30). Whether two spheres interact at all depends on how
         # ALIGNED their headings are, not on whether they touch:
         #     head-on (opposite headings)  -> 0 %  : they never interact, they pass through
         #     rear-end (same heading)      -> 100 %: they always scatter, into `scatter_into`

@@ -1,6 +1,8 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """network.py - the lattice as a set of CIRCUITS rather than a field of loose dots.
 
-Ethan's note: "There should be distinct connected nodes (no more than 10 connected nodes,
+My note: "There should be distinct connected nodes (no more than 10 connected nodes,
 with a few 2 or 3 node (and some 1) branches on the 10 node chain), so they shouldn't all
 flicker independently. This needs to be a living, interconnected, changing network of hexes.
 A lot of hexes shouldn't be connected still, but 20-30% should be in some chain somewhere."
@@ -78,7 +80,7 @@ class Network:
         self.loose_ph_e = rng.random(m).astype(np.float32)
         self.loose_pe_e = rng.uniform(2.4, 7.0, m).astype(np.float32)
 
-        # BORDER FLASH. Ethan liked that the glitch momentarily illuminates unlit nodes, and
+        # BORDER FLASH. I liked that the glitch momentarily illuminates unlit nodes, and
         # asked for the same thing to happen at the edges of lit regions. So: every UNCHAINED
         # site that touches a chain remembers which chain, and occasionally lights with it -
         # the circuit bleeding into the dark lattice around it. Sparse and short, or it just

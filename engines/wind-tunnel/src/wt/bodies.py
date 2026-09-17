@@ -1,16 +1,18 @@
-"""bodies.py â€” FREE bodies: objects the flow actually pushes around.
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
+"""bodies.py — FREE bodies: objects the flow actually pushes around.
 
 Everything in `shapes.py` is placed by the scene at a position the scene chose. A `FreeBody` is
 placed by the *fluid*: each LBM step it reads the momentum the flow handed to its surface
 (`LBM.force_field`, the same momentum-exchange sum that gives Cd/Cl), adds gravity and buoyancy,
-and integrates. Nothing about the trajectory is keyframed â€” a falling disc genuinely slows as
+and integrates. Nothing about the trajectory is keyframed — a falling disc genuinely slows as
 drag builds, drifts when a shed vortex passes, and tumbles because the torque about its own
 centre is non-zero.
 
 Two coupling modes, because one integrator cannot cover both cases:
 
-  `dynamic` â€” full Newtonâ€“Euler. Correct for anything appreciably denser than the fluid.
-  `tracer`  â€” the body is carried at the local fluid velocity and spun at half the local
+  `dynamic` — full Newton–Euler. Correct for anything appreciably denser than the fluid.
+  `tracer`  — the body is carried at the local fluid velocity and spun at half the local
               vorticity (the fluid's solid-body rotation rate). This is what a *neutrally
               buoyant* object does, and it is used deliberately: explicit two-way coupling
               becomes unstable as the density ratio approaches 1, because the fluid the body
@@ -21,10 +23,10 @@ Two coupling modes, because one integrator cannot cover both cases:
 Sizing bodies by TARGET FALL SPEED
 ----------------------------------
 `density_for_fall` picks a body's density from the terminal-velocity balance
-(weight âˆ’ buoyancy = drag) so that a given shape at a given size settles at a chosen speed.
+(weight − buoyancy = drag) so that a given shape at a given size settles at a chosen speed.
 This is choosing the object's *material*, not scripting its path: once released, the motion is
-entirely the solver's. Without it, sizing a set of discs by eye gives wildly different speeds â€”
-drag grows with d but weight grows with dÂ², so big discs plummet while small ones hang.
+entirely the solver's. Without it, sizing a set of discs by eye gives wildly different speeds —
+drag grows with d but weight grows with d², so big discs plummet while small ones hang.
 """
 from __future__ import annotations
 
@@ -34,7 +36,7 @@ from PIL import Image, ImageDraw
 from . import shapes
 from .gpu import asnumpy, xp
 
-# Drag coefficients used ONLY to choose a body's density up front â€” never in the solve.
+# Drag coefficients used ONLY to choose a body's density up front — never in the solve.
 # These are EFFECTIVE values for this tunnel, not textbook free-stream ones: a body occupying
 # ~15-20% of the span in a slip-walled channel drags roughly twice its unconfined figure
 # (measured Cd ~ 2.8 for a cylinder here against a textbook ~1.2). Calibrating against the real
@@ -43,13 +45,13 @@ CD_HINT = {"circle": 2.7, "ellipse": 1.8, "teardrop": 1.0, "square": 2.9,
            "plate": 3.0, "wedge": 2.2, "wedge_rev": 3.2, "naca": 1.9,
            # A surfboard PLANFORM spends most of a sweep at real incidence, so the figure that
            # matters is not its 0-deg one - it sits between an ellipse and a plate. This started
-           # as an estimate of 2.2 and was CORRECTED from a measured run (AGENT_GUIDE 2a.21:
-           # invert the measured ratio, do not bisect); see `SurfSweep.U_REF`.
+           # as an estimate of 2.2 and was CORRECTED from a measured run (invert the measured
+           # ratio, do not bisect); see `SurfSweep.U_REF`.
            "surfboard": 2.4}
 
 
 def _ring(mask):
-    """The one-cell shell of FLUID cells hugging a body â€” where its wall force is deposited."""
+    """The one-cell shell of FLUID cells hugging a body — where its wall force is deposited."""
     d = mask.copy()
     for ax, sh in ((0, 1), (0, -1), (1, 1), (1, -1)):
         d |= np.roll(mask, sh, axis=ax)
@@ -65,7 +67,7 @@ def droplet(blobs, area, iters=3):
     The raw metaball union of two blobs that are merely NEAR each other is 27% fatter than the
     sum of their circles - all of it in the neck. Handing that to the solver in one step turns
     ~500 cells of fluid solid at once, which is the "nothing may materialise inside moving fluid"
-    failure (AGENT_GUIDE 2a.7) in miniature, and it makes the droplet's mass balloon and then
+    failure in miniature, and it makes the droplet's mass balloon and then
     deflate as it fuses.
 
     Rescaling the blobs to hold the area fixed removes both problems, and it is what a real pair
@@ -127,8 +129,8 @@ class FreeBody:
         self._fx = self._fy = self._tq = 0.0
         self.smooth = 0.04
         # EXTERNAL force from an agency outside the fluid, in the same units as the fluid load.
-        # This is the same class of input as a prescribed position or a prescribed spin (CLAUDE.md
-        # section 1): a rig holding a foil, or a RIDER holding a surfboard on the wave. It is not
+        # This is the same class of input as a prescribed position or a prescribed spin:
+        # a rig holding a foil, or a RIDER holding a surfboard on the wave. It is not
         # a fudge for containment - a scene that uses it owns saying so, and a free-body diagram
         # that draws the other forces must draw this one too or it does not add up.
         self.ext = (0.0, 0.0)
@@ -146,7 +148,7 @@ class FreeBody:
         self.unit_area = polygon_area(self.prof)
         self.area = self.unit_area * self.size ** 2
         self.mass = self.density * self.area
-        # radius of gyration of the (unit) profile about its pivot, by direct sampling â€” the
+        # radius of gyration of the (unit) profile about its pivot, by direct sampling — the
         # polygon may be any shape, so an analytic formula per profile is not worth having
         pts = self.prof - np.array([self.pivot, 0.0])
         self.inertia = self.mass * float(np.mean((pts ** 2).sum(1))) * self.size ** 2 * 0.5
@@ -163,7 +165,7 @@ class FreeBody:
 
         With a handful of bodies re-rasterised every LBM step, a full-domain polygon fill per
         body dominates the frame time; a 60x60 fill does not. The box is padded so the ring of
-        FLUID cells just outside the body â€” where the wall force actually lives â€” fits inside it.
+        FLUID cells just outside the body — where the wall force actually lives — fits inside it.
         Returns (mask, x0, y0) or None if entirely off-lattice.
         """
         p = self.polygon()
@@ -201,7 +203,7 @@ class FreeBody:
         fx, fy, torque = self._fx, self._fy, self._tq
 
         gx, gy = g_vec
-        # net gravity = (body - displaced fluid) * g  â€” buoyancy is not optional at these ratios
+        # net gravity = (body - displaced fluid) * g  — buoyancy is not optional at these ratios
         wx = (self.density - 1.0) * self.area * gx
         wy = (self.density - 1.0) * self.area * gy
         self.vx += (fx + wx + self.ext[0]) / self.mass * dt
@@ -357,7 +359,7 @@ class BodySystem:
                     continue
                 sl = (slice(y0, y0 + mask.shape[0]), slice(x0, x0 + mask.shape[1]))
                 # LBM.force_field deposits the wall force on the FLUID cells adjacent to the
-                # body, so integrate over the surrounding RING â€” summing over the body's own
+                # body, so integrate over the surrounding RING — summing over the body's own
                 # cells returns exactly zero. (This is why bodies first fell straight through
                 # the stream as if the air were not there.)
                 h, w = mask.shape
@@ -638,8 +640,8 @@ class BodySystem:
         therefore its WALL velocity, which the moving-boundary term feeds straight into the
         populations - inside a single tick. The boundary broadcasts that discontinuity as a
         pressure wave, and it crosses the whole picture as a visible RIPPLE every time anything
-        touches a wall. It is the identical failure that impulse-based body-body contacts had
-        (AGENT_GUIDE 2a.10), and it wants the identical fix: spread the same momentum change
+        touches a wall. It is the identical failure that impulse-based body-body contacts had,
+        and it wants the identical fix: spread the same momentum change
         over ~30 steps so the fluid never sees a step change.
 
         The spring engages one `wall_gap` BEFORE the stand-off surface, so a body decelerates

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """draw.py - the look. Pillow vector draws at SS x resolution, box-downsampled, plus an
 additive two-scale bloom (tight halo + wide atmosphere).
 
@@ -181,7 +183,7 @@ def draw_world(fr: Frame, world, style: Style, t: float, score=None) -> None:
         base = style.mult_colors.get(mult, style.zone_color) if mult else style.zone_color
         col = _mix(_dim(base, 0.55 + 0.45 * hot), (255, 255, 255), 0.75 * hot)
         if mult:
-            # NO surrounding circle (Ethan 2026-07-29) - the multiplier is the label alone.
+            # NO surrounding circle (design note, 2026-07-29) - the multiplier is the label alone.
             # The catch area is unchanged; only its outline is gone.
             fr.text_c(z["x"], z["y"], f"{mult}x", z["r"] * 0.72, col)
         else:

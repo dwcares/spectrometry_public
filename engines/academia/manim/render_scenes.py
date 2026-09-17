@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """
 render_scenes.py — keyframe-timeline mp4s of nest_egg.html.
 

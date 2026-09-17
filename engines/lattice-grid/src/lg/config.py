@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """config.py - render config + ffmpeg/NVENC resolution.
 
 Ported from Field_Lines\\fl\\config.py (itself from Oscilloscope\\osc\\config.py): same
@@ -9,7 +11,7 @@ output resolution is. `RenderConfig.scale` maps world -> output px, so a 540x960
 1080x1920 final are the SAME picture sampled differently. Library-wide discipline.
 
 The one number this project is built around is `pitch`: the lattice spacing in WORLD px.
-Measured off reel_51d5e4f3 as 12.83 px at 720 wide => 19.25 px at 1080 wide. See CLAUDE.md S2.
+Measured off reel_51d5e4f3 as 12.83 px at 720 wide => 19.25 px at 1080 wide.
 """
 from __future__ import annotations
 

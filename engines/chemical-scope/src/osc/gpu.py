@@ -1,6 +1,8 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """gpu.py — CuPy backend for the hot per-frame math (bloom, film filter). GPU BY DEFAULT.
 
-The GPU (RTX 2060) is the default backend for all rendering — Ethan's standing policy
+The GPU (RTX 2060) is the default backend for all rendering — my standing policy
 (2026-07-18): GPU use is allowed and preferred. Set OSC_CUPY=0 to force the CPU path.
 Everything degrades to numpy/scipy transparently (with a loud warning) if cupy or the CUDA
 runtime is unavailable, so a broken driver can never stop a render — only slow it.

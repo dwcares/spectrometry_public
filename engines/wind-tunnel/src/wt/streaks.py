@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """streaks.py — the advected streakline layer (the white dashes riding on the colour field).
 
 This is the second half of what makes the source video read as *air* rather than as a heatmap:

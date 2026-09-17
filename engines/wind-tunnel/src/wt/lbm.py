@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """lbm.py — the physics: D2Q9 lattice-Boltzmann incompressible flow with an LES closure.
 
 This is the engine that reproduces the source video's behaviour: a real, unsteady, separating
@@ -225,7 +227,7 @@ class LBM:
         so what gets injected is divergence-free by construction. That is not fastidiousness: the
         inlet is a hard equilibrium BC at rho=1, so any compressive part of an injected
         fluctuation leaves as an acoustic wave that then rattles around the domain - the artefact
-        the wall absorber (AGENT_GUIDE 2a.17) exists to mop up. Take the curl and it is never
+        the wall absorber exists to mop up. Take the curl and it is never
         created.
 
         intensity : |u'|_rms as a fraction of the local freestream. A SCALAR (a fraction of `u0`)
@@ -387,8 +389,8 @@ class LBM:
         plume, and near zero in the ambient tunnel that has neither. It is the high-energy stream,
         drawn as one quantity.
 
-        THE STATIC TERM IS GAUGED AND ONE-SIDED, and both parts of that are there to kill an
-        artefact Ethan reported as *"the screen appears like a bouncing jelly"*. A weakly
+        THE STATIC TERM IS GAUGED AND ONE-SIDED, and both parts of that are there to kill
+        the artefact that made the whole screen look like it was wobbling like jelly. A weakly
         compressible lattice carries acoustic waves: rho rings domain-wide whenever anything
         changes, and a mass source correcting a sealed chamber rings it constantly. Plotting
         `(rho - 1)/3` puts every one of those swings straight into the colour of EVERY cell, so

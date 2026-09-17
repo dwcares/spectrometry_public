@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# From spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public
 """cns.py - the COMPRESSIBLE solver: 2-D Navier-Stokes, finite volume, HLLC + MUSCL.
 
 `lbm.py` is the engine this project was built on and is still the right one for almost every
@@ -78,7 +80,7 @@ Deliberately the same public surface as `LBM` (`set_solid`, `run`, `speed`, `vor
 everything downstream - the streaks, the colour mapping, the legend, the body draw - is unchanged.
 What is NOT implemented raises rather than guessing: `force_field` (free bodies would need a
 different force integral here, and this project has already been bitten once by a plausible-
-looking wrong drag - AGENT_GUIDE 2a.1) and `set_drive` (a blue-pool device with no meaning in a
+looking wrong drag) and `set_drive` (a blue-pool device with no meaning in a
 compressible tunnel).
 """
 from __future__ import annotations
@@ -133,7 +135,7 @@ class CNS:
         # FIXED dt (see the module docstring). The estimate has to bound max(|u| + c) over the
         # whole clip, and the term that actually bites is BLOCKAGE, not the freestream: with
         # free-slip walls the stream squeezing past three foils at incidence reaches ~3-4x the
-        # band speed (AGENT_GUIDE 2a.20), and a compressible stagnation region raises c by ~10%
+        # band speed, and a compressible stagnation region raises c by ~10%
         # on top. Under-estimate this and the run violates CFL and dies; over-estimate and the
         # only cost is render time. `cfl_now()` reports what was actually achieved.
         self.cfl = float(cfl)
@@ -368,7 +370,7 @@ class CNS:
             "LBM (cfg.solver='lbm'). Implementing it means integrating pressure + viscous "
             "traction over the immersed surface and VALIDATING it against a known Cd, the way "
             "tools\\calib.py did for the LBM - a plausible-looking wrong force is exactly the "
-            "bug that measured Cd~22 in this project once already (AGENT_GUIDE 2a.1).")
+            "bug that measured Cd~22 in this project once already.")
 
     # -- the scheme ----------------------------------------------------------------------
     def _bcs(self, Q):
@@ -394,7 +396,7 @@ class CNS:
         # OUTLET: zero-gradient (the sponge does the absorbing)
         Q[:, :, -NG:] = Q[:, :, -NG - 1:-NG]
         # SIDES: free-slip tunnel walls by mirroring, with the wall-normal momentum reversed.
-        # Same choice and same reason as the LBM (AGENT_GUIDE 2a.13): imposing a velocity on the
+        # Same choice and same reason as the LBM: imposing a velocity on the
         # edge rows draws a hard stripe wherever a body blocks the tunnel. Blockage is therefore
         # REAL here too - which is why `blockage` feeds the dt estimate above.
         for g, src in ((NG - 1, NG), (NG - 2, NG + 1)):

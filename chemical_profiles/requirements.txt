@@ -1,4 +1,4 @@
-# Drug-profile renders — the whole dependency list.
+# Chemical profile renders — the whole dependency list.
 #
 # These are the versions the profiles in this repo were rendered with. manim moves
 # fast and its API does break between minor versions, so the pin is deliberate; if
