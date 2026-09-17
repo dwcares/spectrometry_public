@@ -3,123 +3,233 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spectrometry Shorts — chemical profiles and the engines behind them</title>
-<meta name="description" content="Chemical profile videos built in manim, and eight standalone
-      rendering engines: two fluid solvers, field-line integrators, rigid-body physics, particle
-      swarms, a simulated CRT, and publication figure code.">
+<title>spectrometry.mp4 engines: the code behind the videos</title>
+<meta name="description" content="Free, open-source Python engines behind the spectrometry.mp4 videos: 2-D fluid dynamics, electric field lines, strange-attractor particle swarms, bouncing-shape physics, a simulated CRT oscilloscope and molecule spectra, rendered straight to video with ffmpeg.">
+<meta name="author" content="Ethan Earl">
+<meta name="keywords" content="spectrometry.mp4, simulation video, fluid simulation, lattice Boltzmann, field lines, strange attractor, oscilloscope, CRT filter, manim, spectroscopy, generative art, creative coding, python, ffmpeg">
 <link rel="canonical" href="https://ec175.github.io/spectrometry_public/">
+<meta name="theme-color" content="#0b0f14">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
 
-<!-- Open Graph / Twitter: this is what renders when the link is pasted into a chat, a DM or a
-     job application. Without it a shared link shows a bare URL. -->
+<!-- What renders when the link is pasted into a chat, a DM or a bio -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Spectrometry Shorts">
-<meta property="og:description" content="Chemical profiles in manim, plus eight standalone
-      rendering engines — fluid dynamics, field lines, rigid bodies, attractors, a simulated CRT
-      and publication figures.">
+<meta property="og:site_name" content="spectrometry.mp4">
+<meta property="og:title" content="spectrometry.mp4 engines">
+<meta property="og:description" content="The open-source code behind the videos: fluid sims, field lines, particle swarms, a simulated CRT and molecule spectra. Free to use.">
 <meta property="og:url" content="https://ec175.github.io/spectrometry_public/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://ec175.github.io/spectrometry_public/media/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="spectrometry.mp4: the open-source engines behind the videos">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@spectrometrymp4">
+<meta name="twitter:image" content="https://ec175.github.io/spectrometry_public/media/social-preview.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "spectrometry.mp4 engines",
+  "description": "Open-source Python engines that turn real simulations into video: lattice-Boltzmann and compressible Navier-Stokes fluid dynamics, field lines, strange-attractor particle swarms, rigid-body shape physics, a simulated CRT oscilloscope with a film filter, and simulated molecular spectra.",
+  "url": "https://ec175.github.io/spectrometry_public/",
+  "codeRepository": "https://github.com/ec175/spectrometry_public",
+  "programmingLanguage": "Python",
+  "license": "https://opensource.org/licenses/MIT",
+  "image": "https://ec175.github.io/spectrometry_public/media/social-preview.png",
+  "keywords": ["simulation", "fluid dynamics", "lattice Boltzmann", "field lines", "strange attractors", "oscilloscope", "spectroscopy", "manim", "ffmpeg", "generative art"],
+  "author": {
+    "@type": "Person",
+    "name": "Ethan Earl",
+    "alternateName": "spectrometry.mp4",
+    "sameAs": [
+      "https://github.com/ec175",
+      "https://instagram.com/spectrometry.mp4",
+      "https://www.youtube.com/channel/UChtdNI2BC1SmkmHEERA4dzg",
+      "https://x.com/spectrometrymp4"
+    ]
+  }
+}
+</script>
 
 <style>
   :root{
-    --bg:#fafafa; --fg:#1a1a1a; --muted:#5a5f66; --line:#e5e5e5;
-    --card:#fff; --link:#0a58ca; --chip:#eef0f2;
+    --bg:#0b0f14; --panel:#121820; --line:#232b36; --fg:#eef2f6; --muted:#9aa6b2;
+    --accent:#ffc440; --accent-ink:#0b0f14; --code:#0f141b; --radius:14px;
   }
-  @media (prefers-color-scheme: dark){
+  @media (prefers-color-scheme: light){
     :root{
-      --bg:#0f1115; --fg:#e8eaed; --muted:#9aa3ad; --line:#242832;
-      --card:#161a21; --link:#7aa7ff; --chip:#1e232c;
+      --bg:#f6f7f9; --panel:#ffffff; --line:#e1e5ea; --fg:#10151b; --muted:#56606b;
+      --accent:#b37700; --accent-ink:#ffffff; --code:#eef1f4;
     }
   }
   *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:820px;
-       margin:0 auto;padding:48px 20px 64px;line-height:1.6;color:var(--fg);background:var(--bg)}
-  a{color:var(--link);text-decoration:none}
-  a:hover{text-decoration:underline}
-  header{border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:8px}
-  h1{font-size:1.75rem;margin:0 0 .35rem;letter-spacing:-.01em}
-  .lede{color:var(--muted);margin:0;font-size:1.02rem;max-width:62ch}
-  h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
-     margin:36px 0 10px;font-weight:600}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
-        padding:18px 20px;margin:12px 0}
-  .card p{margin:.35rem 0 0;color:var(--muted);font-size:.94rem}
-  .card a{font-weight:600}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
-  .grid .card{margin:0}
-  .grid strong{display:block;font-size:.95rem}
-  .grid span{color:var(--muted);font-size:.88rem}
-  code{background:var(--chip);padding:2px 6px;border-radius:4px;font-size:.88em;
-       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-  .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-  .row a{background:var(--chip);border:1px solid var(--line);border-radius:999px;
-         padding:6px 14px;font-size:.88rem;color:var(--fg)}
-  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
-         color:var(--muted);font-size:.86rem}
-  footer a{color:var(--muted);text-decoration:underline}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);line-height:1.6;
+       font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif}
+  a{color:inherit}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px}
+
+  .hero{position:relative;margin:0 0 8px;background:#05070a}
+  .hero img{display:block;width:100%;height:auto;max-height:440px;object-fit:cover}
+  .intro{text-align:center;padding:28px 0 8px}
+  .intro h1{margin:0;font-size:clamp(1.5rem,4.5vw,2.2rem);letter-spacing:-.01em;line-height:1.2}
+  .intro p{margin:.6rem auto 0;max-width:60ch;color:var(--muted)}
+  .buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px 0 4px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;
+       border:1px solid var(--line);background:var(--panel);text-decoration:none;font-weight:600;
+       font-size:.95rem;min-height:44px}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+  .btn:hover{filter:brightness(1.08)}
+  .btn:focus-visible,.card:focus-visible,.copy:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  section{padding:36px 0 4px}
+  h2{margin:0 0 6px;font-size:1.35rem}
+  .sub{margin:0 0 18px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:640px){ .grid{grid-template-columns:repeat(2,1fr);gap:10px} }
+  .card{display:block;border-radius:var(--radius);overflow:hidden;background:#05070a;
+        border:1px solid var(--line);aspect-ratio:9/16;transition:transform .15s ease}
+  .card:hover{transform:translateY(-3px)}
+  .card img{display:block;width:100%;height:100%;object-fit:cover}
+  @media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover{transform:none} }
+
+  .steps{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+  .panel{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .panel h3{margin:0 0 4px;font-size:1.02rem}
+  .panel p{margin:0 0 10px;color:var(--muted);font-size:.95rem}
+  pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+      overflow-x:auto;font-size:.86rem;line-height:1.5}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .credit{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+  .credit pre{flex:1 1 280px;white-space:pre-wrap;word-break:break-word}
+  .copy{border:0;border-radius:10px;padding:0 16px;min-height:44px;font-weight:600;cursor:pointer;
+        background:var(--accent);color:var(--accent-ink);font-size:.9rem}
+  ul.tight{margin:.2rem 0 0;padding-left:1.1rem;color:var(--muted)}
+  ul.tight li{margin:.25rem 0}
+
+  footer{margin:48px 0 0;padding:22px 0 40px;border-top:1px solid var(--line);color:var(--muted);
+         font-size:.9rem;text-align:center}
+  footer a{color:var(--muted)}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Spectrometry Shorts</h1>
-  <p class="lede">Chemical profiles built in manim — a molecule spinning over the NMR and infrared
-     spectra that identify it, with the peaks numbered to match the atoms. Plus the eight
-     rendering engines behind the rest of the work, published as parts.</p>
-  <div class="row">
-    <a href="https://www.youtube.com/channel/UChtdNI2BC1SmkmHEERA4dzg">YouTube</a>
-    <a href="https://instagram.com/spectrometry.mp4">Instagram</a>
-    <a href="https://x.com/spectrometrymp4">X</a>
-    <a href="https://github.com/ec175/spectrometry_public">GitHub</a>
+<div class="hero">
+  <img src="media/hero.webp" width="1284" height="440"
+       alt="Looping clips from six engines: a wind tunnel, electric field lines, a strange attractor, an oscilloscope, a circuit lattice and a molecule on a CRT">
+</div>
+
+<main class="wrap">
+
+<div class="intro">
+  <h1>The code behind the spectrometry.mp4 videos</h1>
+  <p>Nothing on the channel is animated by hand. A real simulation runs and every frame goes
+     straight into the video. These are the engines that do it, free for anyone to use.</p>
+  <div class="buttons">
+    <a class="btn primary" href="https://github.com/ec175/spectrometry_public">Get the code on GitHub</a>
+    <a class="btn" href="https://instagram.com/spectrometry.mp4">Instagram</a>
+    <a class="btn" href="https://www.youtube.com/channel/UChtdNI2BC1SmkmHEERA4dzg">YouTube</a>
+    <a class="btn" href="https://x.com/spectrometrymp4">X</a>
   </div>
-</header>
-
-<h2>Render one yourself</h2>
-<div class="card">
-  <a href="https://github.com/ec175/spectrometry_public">Source on GitHub</a>
-  <p>Clone it, <code>pip install -r requirements.txt</code>, and render. Python 3.10+ and ffmpeg.
-     No LaTeX install needed — the scenes use Pango text rather than <code>MathTex</code>.</p>
-</div>
-<div class="card">
-  <a href="https://github.com/ec175/spectrometry_public/blob/main/chemical_profiles/GUIDE.md">Full guide</a>
-  <p>Installing from scratch, what every quality flag does, authoring a new molecule attribute by
-     attribute, and what to do when something breaks.</p>
 </div>
 
-<h2>The engines</h2>
-<p class="lede">Seven compute something real in numpy and pipe raw frames straight to ffmpeg — no
-   scene graph, no timeline. The eighth makes the publication figures the whole thing grew out of.
-   Each is standalone, catalogued, and shipped with reference stills.</p>
+<section id="engines">
+  <h2>Find the engine behind a video</h2>
+  <p class="sub">Tap the one that looks like what you saw.</p>
+  <div class="grid">
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/wind-tunnel/README.md"><img src="media/wind-tunnel.webp" loading="lazy" alt="Wind Tunnel: three airfoils shedding vortices, coloured by flow speed"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/field-lines/README.md"><img src="media/field-lines.webp" loading="lazy" alt="Field Lines: glowing blue electric field lines around moving charges"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/lattice-grid/README.md"><img src="media/lattice-grid.webp" loading="lazy" alt="Lattice Grid: a honeycomb of coloured circuit symbols flickering to a beat"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/shape-physics/README.md"><img src="media/shape-physics.webp" loading="lazy" alt="Shape Physics: balls breaking out of a spinning pink ring"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/attractors/README.md"><img src="media/attractors.webp" loading="lazy" alt="Attractors: a Lorenz butterfly drawn by thousands of glowing particles"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/oscilloscope/README.md"><img src="media/oscilloscope.webp" loading="lazy" alt="Oscilloscope: a green phosphor rose pattern on a simulated CRT"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/chemical-scope/README.md"><img src="media/chemical-scope.webp" loading="lazy" alt="Chemical Scope: serotonin and its FTIR spectrum on a green CRT"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/chemical_profiles/README.md"><img src="media/chemical-profiles.webp" loading="lazy" alt="Chemical Profiles: caffeine with its FTIR spectrum, animated in manim"></a>
+    <a class="card" href="https://github.com/ec175/spectrometry_public/blob/main/engines/academia/README.md"><img src="media/academia.webp" loading="lazy" alt="Academia: stacked simulated spectra for a class of molecules"></a>
+  </div>
+</section>
 
-<div class="grid">
-  <div class="card"><strong>Wind Tunnel</strong><span>D2Q9 lattice-Boltzmann and a compressible
-    Navier–Stokes solver with HLLC. Nothing on screen is keyframed.</span></div>
-  <div class="card"><strong>Field Lines</strong><span>Any closed-form vector field, integrated in
-    constant arclength. Electrostatics, potential flow, magnetostatics.</span></div>
-  <div class="card"><strong>Lattice Grid</strong><span>Illuminated circuit lattices whose content
-    re-rolls on the beat.</span></div>
-  <div class="card"><strong>Shape Physics</strong><span>Discs, shells and destructible structures —
-    with audio the simulation triggers.</span></div>
-  <div class="card"><strong>Attractors</strong><span>Forty thousand particles through a chaotic
-    flow. The picture is where they crowd.</span></div>
-  <div class="card"><strong>Oscilloscope</strong><span>A simulated CRT: phosphor persistence, a
-    film-off-a-screen filter, and a glitch layer.</span></div>
-  <div class="card"><strong>Chemical Scope</strong><span>Twenty-nine molecules with FTIR and Raman,
-    drawn on that CRT.</span></div>
-  <div class="card"><strong>Academia</strong><span>Stacked simulated spectra for whole compound
-    classes, structures drawn alongside.</span></div>
-</div>
+<section id="soon">
+  <h2>Not public yet</h2>
+  <p class="sub">These made some of my newer videos. Their code shows up on GitHub once it's cleaned
+     up for sharing.</p>
+  <div class="grid">
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/gas-lab.webp" loading="lazy" alt="Gas Lab: gas molecules compressed and ignited in an engine cylinder"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/orbital-lab.webp" loading="lazy" alt="Orbital Lab: a glowing electron orbital morphing between shapes"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/plume-lab.webp" loading="lazy" alt="Plume Lab: three rocket exhaust plumes with shock diamonds"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/mechanics-board.webp" loading="lazy" alt="Mechanics Board: a physics problem solved on white paper"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/cinematic.webp" loading="lazy" alt="Cinematic: a title card over a swirling blue field"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/elements.webp" loading="lazy" alt="Elements: the carbon tile from the 118 element series"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/field-notes.webp" loading="lazy" alt="Field Notes: creatures in a living blue ecosystem"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/bio-lab.webp" loading="lazy" alt="Bio Lab: a colony of glowing green and yellow cells"></a>
+    <a class="card" href="https://instagram.com/spectrometry.mp4"><img src="media/cow-launch.webp" loading="lazy" alt="Cow Launch: a cow riding a rocket plume into the sky"></a>
+  </div>
+</section>
 
-<div class="card">
-  <a href="https://github.com/ec175/spectrometry_public/blob/main/CATALOG.md">Full catalogue — 193 objects, 83 compositions</a>
-  <p>Every object each engine makes, with parameters, ranges, and notes on what breaks if you
-     change them.</p>
-</div>
+<section id="try">
+  <h2>Try one in five minutes</h2>
+  <p class="sub">You need Python 3.10+ and ffmpeg. A GPU helps, but nothing needs one.</p>
+  <div class="steps">
+    <div class="panel">
+      <h3>1. Get the code</h3>
+      <pre><code>git clone https://github.com/ec175/spectrometry_public.git
+cd spectrometry_public
+python -m venv .venv</code></pre>
+      <p style="margin:10px 0 0">Then turn it on: <code>.venv\Scripts\activate</code> on Windows,
+         <code>source .venv/bin/activate</code> on macOS and Linux.</p>
+    </div>
+    <div class="panel">
+      <h3>2. Make a full video</h3>
+      <p>A finished scene: one molecule and its spectra.</p>
+      <pre><code>pip install -r chemical_profiles/requirements.txt
+cd chemical_profiles
+manim -ql -r 540,960 chemical_profile.py VerticalProfile_Aspirin</code></pre>
+    </div>
+    <div class="panel">
+      <h3>…or put the CRT look on your own clip</h3>
+      <pre><code>pip install -r engines/oscilloscope/src/requirements.txt
+python engines/oscilloscope/src/filter_cli.py your_clip.mp4 filmed.mp4 --glitch 0.8</code></pre>
+    </div>
+  </div>
+</section>
 
-<footer>
-  <p>Legal pages for the publishing automation — a personal tool that posts the operator's own
-     videos to their own accounts: <a href="privacy.html">Privacy Policy</a> ·
-     <a href="terms.html">Terms of Service</a></p>
+<section id="credit">
+  <h2>Use it in your own stuff</h2>
+  <p class="sub">Anyone can use this code. It's MIT licensed. All I ask is a trail back to the repo:</p>
+  <div class="panel">
+    <ul class="tight">
+      <li>Keep the two-line header at the top of any file you copy.</li>
+      <li>Credit it in your project or your video description:</li>
+    </ul>
+    <div class="credit" style="margin-top:10px">
+      <pre id="credit-line"><code>Made with spectrometry.mp4 engines by Ethan Earl - github.com/ec175/spectrometry_public</code></pre>
+      <button class="copy" type="button" data-copy="credit-line">Copy</button>
+    </div>
+    <p style="margin:12px 0 0">Using an AI coding agent? Point it at
+      <a href="https://github.com/ec175/spectrometry_public/blob/main/AGENTS.md">AGENTS.md</a>.
+      Posted something? Tag <a href="https://instagram.com/spectrometry.mp4">@spectrometry.mp4</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Made by Ethan Earl ·
+  <a href="https://github.com/ec175/spectrometry_public">GitHub</a> ·
+  <a href="https://github.com/ec175/spectrometry_public/blob/main/LICENSE">MIT license</a> ·
+  <a href="https://github.com/ec175/spectrometry_public/blob/main/engines/CATALOG.md">Full catalogue</a>
 </footer>
 
+<script>
+  document.querySelectorAll("button[data-copy]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var text = document.getElementById(b.dataset.copy).innerText.trim();
+      var done = function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1600); };
+      try {
+        navigator.clipboard.writeText(text).then(done, function () {});
+      } catch (e) { /* clipboard not available (old in-app browsers); the text stays selectable */ }
+    });
+  });
+</script>
 </body>
 </html>

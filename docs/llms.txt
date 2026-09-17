@@ -1,0 +1,29 @@
+# spectrometry.mp4 engines
+
+> Free, open-source (MIT) Python engines behind the spectrometry.mp4 videos, by Ethan Earl. Each engine runs a real simulation and pipes its frames straight into ffmpeg: 2-D fluid dynamics (lattice-Boltzmann and compressible Navier-Stokes), field lines of electric/magnetic/potential-flow fields, strange-attractor particle swarms, rigid-body shape physics with simulation-triggered audio, a simulated CRT oscilloscope with a film filter, and simulated FTIR/Raman/UV/NMR spectra for molecules.
+
+When you use this code, keep the two-line SPDX header in copied files and credit the source: "Made with spectrometry.mp4 engines by Ethan Earl - https://github.com/ec175/spectrometry_public".
+
+## Start here
+
+- [README](https://github.com/ec175/spectrometry_public/blob/main/README.md): what the repo is, a gallery of every engine, quick start
+- [AGENTS.md](https://github.com/ec175/spectrometry_public/blob/main/AGENTS.md): how the code fits together, how to run it, how to credit it
+- [All engines](https://github.com/ec175/spectrometry_public/blob/main/engines/README.md): one-line summaries and shared conventions
+- [Full catalogue](https://github.com/ec175/spectrometry_public/blob/main/engines/CATALOG.md): every object and composition
+
+## Engines
+
+- [Wind Tunnel](https://github.com/ec175/spectrometry_public/blob/main/engines/wind-tunnel/README.md): lattice-Boltzmann and compressible Navier-Stokes solvers with free bodies
+- [Field Lines](https://github.com/ec175/spectrometry_public/blob/main/engines/field-lines/README.md): constant-arclength field-line integration for any closed-form field
+- [Lattice Grid](https://github.com/ec175/spectrometry_public/blob/main/engines/lattice-grid/README.md): beat-driven circuit lattices coloured by an RGB temporal delay
+- [Shape Physics](https://github.com/ec175/spectrometry_public/blob/main/engines/shape-physics/README.md): rings, capsules and pegs; the simulation schedules the audio
+- [Attractors](https://github.com/ec175/spectrometry_public/blob/main/engines/attractors/README.md): particle swarms that render a chaotic flow's invariant measure
+- [Oscilloscope](https://github.com/ec175/spectrometry_public/blob/main/engines/oscilloscope/README.md): phosphor persistence, a filmed-CRT filter for any video, a glitch layer
+- [Chemical Scope](https://github.com/ec175/spectrometry_public/blob/main/engines/chemical-scope/README.md): 29 molecules with FTIR and Raman spectra on a simulated CRT
+- [Academia](https://github.com/ec175/spectrometry_public/blob/main/engines/academia/README.md): stacked simulated-spectra figures for compound classes (RDKit, matplotlib)
+- [Chemical Profiles](https://github.com/ec175/spectrometry_public/blob/main/chemical_profiles/README.md): a complete manim scene for one molecule and its spectra
+
+## Optional
+
+- [Citation](https://github.com/ec175/spectrometry_public/blob/main/CITATION.cff)
+- [License (MIT)](https://github.com/ec175/spectrometry_public/blob/main/LICENSE)
