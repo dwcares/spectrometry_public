@@ -283,9 +283,13 @@ class ModelInTunnel:
     def aoa_at(self, t):
         if self.sweep is None:
             return self.aoa0
-        a0, a1 = self.sweep
-        s = np.clip(t / max(self.duration, 1e-9), 0.0, 1.0)
-        return a0 + (a1 - a0) * (0.5 - 0.5 * np.cos(np.pi * s))    # eased: no step at the ends
+        # legs of equal length between the listed angles, each eased so the model comes to rest
+        # at every turning point: a step in angular rate would be a step in wall speed
+        legs = len(self.sweep) - 1
+        s = np.clip(t / max(self.duration, 1e-9), 0.0, 1.0) * legs
+        k = min(int(s), legs - 1)
+        a0, a1 = self.sweep[k], self.sweep[k + 1]
+        return a0 + (a1 - a0) * (0.5 - 0.5 * np.cos(np.pi * (s - k)))
 
     def bodies(self, t):
         self._aoa = self.aoa_at(t)
@@ -351,7 +355,7 @@ def main():
     ap.add_argument("--slice", type=float, default=None,
                     help="cut a cross-section at this depth coordinate instead of the side view")
     ap.add_argument("--aoa", type=float, default=0.0, help="angle of attack, deg (nose up +)")
-    ap.add_argument("--sweep", default=None, help="sweep incidence a0:a1 over the clip, deg")
+    ap.add_argument("--sweep", default=None, help="sweep incidence a0:a1[:a2...] over the clip, deg (equal legs)")
     ap.add_argument("--pivot", type=float, default=0.35, help="rotation point, fraction of length")
     ap.add_argument("--chord", type=float, default=0.34, help="body length / visible width")
     ap.add_argument("--seconds", type=float, default=8.0)
