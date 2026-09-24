@@ -51,13 +51,121 @@ def _axis(s):
     return AX[s.lstrip("+-")], sign
 
 
+# --- DXF rib -> smooth aerofoil -----------------------------------------------------------
+def _cst_basis(x, order):
+    """Kulfan CST: class function sqrt(x)(1-x) times Bernstein polynomials, plus a linear term
+    for trailing-edge thickness / chord-line tilt. Round nose and a clean TE by construction."""
+    from math import comb
+    c = np.sqrt(x) * (1.0 - x)
+    cols = [c * comb(order, i) * x ** i * (1.0 - x) ** (order - i) for i in range(order + 1)]
+    return np.stack(cols + [x], 1)
+
+
+def dxf_rib_profile(path, rib=0, order=8, margin=0.012):
+    """A laser-cut rib (outline with spar slots, LE/TE notches, plus the insert pieces) ->
+    the smooth aerofoil it was cut from, as a closed polygon in unit chord (LE at 0, +y up).
+
+    The notches are where the spars and edge stock were INSERTED, so they are not part of the
+    section the air sees. The rib outline is sampled column by column, every column within
+    `margin` chord of an insert is dropped, and a CST curve is least-squares fitted to what is
+    left, separately for the upper and lower surfaces.
+    """
+    import ezdxf
+    from ezdxf import path as dpath
+    doc = ezdxf.readfile(path)
+    pieces = []
+    for e in doc.modelspace():
+        subs = e.virtual_entities() if e.dxftype() == "INSERT" else [e]
+        for v in subs:
+            try:
+                p = np.array([(q.x, q.y) for q in dpath.make_path(v).flattening(0.05)])
+            except Exception:
+                continue
+            if len(p) > 2:
+                pieces.append(p)
+    box = lambda p: (p[:, 0].min(), p[:, 0].max(), p[:, 1].min(), p[:, 1].max())
+    area = lambda p: np.ptp(p[:, 0]) * np.ptp(p[:, 1])
+    big = max(area(p) for p in pieces)
+    ribs = sorted([p for p in pieces if area(p) > 0.25 * big], key=lambda p: p[:, 0].min())
+    if not ribs:
+        raise SystemExit("no rib outline found in the DXF")
+    R = ribs[int(rib)]
+    rx0, rx1, ry0, ry1 = box(R)
+    tol = 0.005 * (rx1 - rx0)          # an insert belongs to this rib if its CENTRE is on it
+    ctr = lambda p: (0.5 * (box(p)[0] + box(p)[1]), 0.5 * (box(p)[2] + box(p)[3]))
+    ins = [p for p in pieces if area(p) <= 0.25 * big and
+           rx0 - tol < ctr(p)[0] < rx1 + tol and ry0 - tol < ctr(p)[1] < ry1 + tol]
+    allx = np.concatenate([R[:, 0]] + [p[:, 0] for p in ins])
+    le_x, te_x = allx.min(), allx.max()
+    chord = te_x - le_x
+    le_piece = min(ins, key=lambda p: p[:, 0].min()) if ins else None
+    if le_piece is not None and le_piece[:, 0].min() <= rx0:
+        le_y = 0.5 * (le_piece[:, 1].min() + le_piece[:, 1].max())
+    else:
+        le_y = None
+
+    # column envelope of the rib outline, at ~0.5 mm (well under 0.1% chord)
+    s = 2.0
+    W, H = int(np.ceil((rx1 - rx0) * s)) + 3, int(np.ceil((ry1 - ry0) * s)) + 3
+    img = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(img).polygon([((x - rx0) * s + 1, (ry1 - y) * s + 1) for x, y in R], fill=255)
+    m = np.asarray(img) > 0
+    cols = np.nonzero(m.any(0))[0]
+    xs = (cols - 1) / s + rx0
+    top = ry1 - (np.argmax(m[:, cols], 0) - 1) / s
+    bot = ry1 - (H - 1 - np.argmax(m[::-1, cols], 0) - 1) / s
+    keep = np.ones(len(xs), bool)
+    for p in ins:
+        keep &= ~((xs > p[:, 0].min() - margin * chord) & (xs < p[:, 0].max() + margin * chord))
+    keep &= (xs > le_x + margin * chord) & (xs < te_x - margin * chord)
+    if le_y is None:
+        le_y = 0.5 * (top[keep][0] + bot[keep][0])
+    xc = (xs[keep] - le_x) / chord
+    A = _cst_basis(xc, order)
+    cu = np.linalg.lstsq(A, (top[keep] - le_y) / chord, rcond=None)[0]
+    cl = np.linalg.lstsq(A, (bot[keep] - le_y) / chord, rcond=None)[0]
+    res = max(np.abs(A @ cu - (top[keep] - le_y) / chord).max(),
+              np.abs(A @ cl - (bot[keep] - le_y) / chord).max())
+
+    b = np.linspace(0.0, np.pi, 240)
+    xe = 0.5 * (1.0 - np.cos(b))                       # cosine spacing: dense at LE and TE
+    B = _cst_basis(xe, order)
+    yu, yl = B @ cu, B @ cl
+    poly = np.concatenate([np.stack([xe[::-1], yu[::-1]], 1), np.stack([xe[1:], yl[1:]], 1)])
+    t = yu - yl
+    info = dict(mode=f"rib {int(rib) + 1}/{len(ribs)} smoothed (CST order {order})",
+                ribs=len(ribs), inserts=len(ins), chord_units=chord,
+                thickness=float(t.max()), thickness_at=float(xe[np.argmax(t)]),
+                te_thickness=float(t[-1]), fit_max_err=float(res),
+                raw=((R - [le_x, le_y]) / chord))
+    return poly, info
+
+
+def profile_cutout(poly, out_png, px=2400, color=(214, 206, 188)):
+    """Unit-chord polygon (+y up) -> RGBA cut-out, nose on the left, for `image_body`."""
+    pad = 8
+    k = px - 1
+    y1 = poly[:, 1].max()
+    W, H = px + 2 * pad, int(np.ceil((y1 - poly[:, 1].min()) * k)) + 2 * pad
+    alpha = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(alpha).polygon([(x * k + pad, (y1 - y) * k + pad) for x, y in poly], fill=255)
+    im = Image.new("RGB", (W, H), color).convert("RGBA")
+    im.putalpha(alpha)
+    im.save(out_png)
+
+
 # --- model -> cut-out PNG ---------------------------------------------------------------
-def model_cutout(path, out_png, forward="+y", up="+z", slice_at=None, px=2400):
+def model_cutout(path, out_png, forward="+y", up="+z", slice_at=None, px=2400, rib=0):
     """Render the model's side silhouette (or a cross-section) as an RGBA cut-out.
 
     Image x runs nose -> tail (left to right), image y runs top -> bottom. Returns a dict of
-    what was cut, for the log.
+    what was cut, for the log. A .dxf is read as a sheet of laser-cut ribs instead.
     """
+    if path.lower().endswith(".dxf"):
+        poly, info = dxf_rib_profile(path, rib=rib)
+        profile_cutout(poly, out_png, px)
+        info.update(length=1.0, height=float(np.ptp(poly[:, 1])), png=out_png, poly=poly)
+        return info
     import trimesh
     mesh = trimesh.load(path, force="mesh")
     fi, fs = _axis(forward)
@@ -186,6 +294,8 @@ def main():
     ap.add_argument("--name", default=None, help="output stem (default: model file name)")
     ap.add_argument("--forward", default="+y", help="model axis the nose points along")
     ap.add_argument("--up", default="+z", help="model up axis")
+    ap.add_argument("--title", default=None, help="text shown on screen (default: file name)")
+    ap.add_argument("--rib", type=int, default=0, help="DXF only: which rib, 0 = leftmost")
     ap.add_argument("--slice", type=float, default=None,
                     help="cut a cross-section at this depth coordinate instead of the side view")
     ap.add_argument("--aoa", type=float, default=0.0, help="angle of attack, deg (nose up +)")
@@ -220,7 +330,7 @@ def main():
     cfg.settle = 2.0
 
     cut_png = os.path.join(OUT, f"{name}_cutout.png")
-    info = model_cutout(a.model, cut_png, a.forward, a.up, a.slice)
+    info = model_cutout(a.model, cut_png, a.forward, a.up, a.slice, rib=a.rib)
     chord = a.chord * cfg.vis_nx
     body = shapes.image_body(cut_png, cells=chord)
     ext = body["ybox"][1] - body["ybox"][0]
@@ -229,7 +339,8 @@ def main():
           f"{len(body['points'])} outline points")
 
     sweep = tuple(float(s) for s in a.sweep.split(":")) if a.sweep else None
-    title = os.path.basename(a.model) + (f"  |  {info['mode']}" if a.slice is not None else "")
+    title = a.title or (os.path.basename(a.model) +
+                        (f"  |  {info['mode']}" if a.slice is not None else ""))
     scene = ModelInTunnel(body, chord, cx=cfg.vis_x0 + 0.26 * cfg.vis_nx, cy=cfg.ny / 2,
                           aoa=a.aoa, sweep=sweep, duration=a.seconds, pivot=a.pivot, title=title)
 
@@ -241,7 +352,7 @@ def main():
     tun.settle(cfg.settle)
     print(f"  settled in {time.time() - t0:.0f}s", flush=True)
 
-    font = _font(max(14, cfg.height // 36))
+    font = _font(max(14, min(cfg.width, cfg.height) // 30))
     n = max(1, int(round(a.seconds * cfg.fps)))
     stills = sorted(a.still) if a.still is not None else None
     tag = "_preview" if a.preview else ""
