@@ -42,6 +42,35 @@ from wt.config import OUT, RenderConfig, encoder_args, find_ffmpeg          # no
 from wt.gpu import GPU                                                      # noqa: E402
 from wt.render import Tunnel                                                # noqa: E402
 
+
+class PaddedConfig(RenderConfig):
+    """RenderConfig with an off-screen margin UPSTREAM and DOWNSTREAM only.
+
+    `overscan` pads all four sides by the same fraction. A zoomed-in, centred body needs room
+    in the streamwise direction only, where the inlet clamp and the outlet sponge would
+    otherwise sit a few cells from it. A tall frame with the flow running across it already
+    has plenty of cross-stream room, so padding that too would double the cost for nothing.
+    `pad_up` / `pad_down` are fractions of the visible streamwise extent.
+    """
+    pad_up = 0.0
+    pad_down = 0.0
+
+    @property
+    def nx(self) -> int:
+        return self.vis_nx + int(round(self.vis_nx * (self.pad_up + self.pad_down)))
+
+    @property
+    def ny(self) -> int:
+        return self.vis_ny
+
+    @property
+    def vis_x0(self) -> int:
+        return int(round(self.vis_nx * self.pad_up))
+
+    @property
+    def vis_y0(self) -> int:
+        return 0
+
 AX = {"x": 0, "y": 1, "z": 2}
 
 
@@ -331,7 +360,13 @@ def main():
     ap.add_argument("--re", type=float, default=4000.0)
     ap.add_argument("--steps", type=int, default=14)
     ap.add_argument("--preview", action="store_true", help="960x540 at 30 fps, same lattice")
-    ap.add_argument("--vertical", action="store_true", help="1080x1920, flow bottom-to-top")
+    ap.add_argument("--vertical", action="store_true", help="1080x1920 (9:16)")
+    ap.add_argument("--flow", default=None, choices=["up", "down", "right"],
+                    help="flow direction on screen (default: up when --vertical, else right)")
+    ap.add_argument("--center", action="store_true",
+                    help="centre the body in frame and simulate off-screen margins up/downstream")
+    ap.add_argument("--pad", type=float, default=0.6,
+                    help="with --center: off-screen tunnel each side, fraction of visible length")
     ap.add_argument("--film", action="store_true", help="CRT 'filmed off a screen' pass")
     ap.add_argument("--no-hud", action="store_true")
     ap.add_argument("--still", type=float, nargs="*", default=None,
@@ -343,10 +378,11 @@ def main():
         name += f"_slice{a.slice:g}"
     os.makedirs(OUT, exist_ok=True)
 
-    if a.vertical:
-        cfg = RenderConfig(width=1080, height=1920, fps=60, flow="up")
-    else:
-        cfg = RenderConfig(width=1920, height=1080, fps=60, flow="right")
+    W, H = (1080, 1920) if a.vertical else (1920, 1080)
+    flow = a.flow or ("up" if a.vertical else "right")
+    cfg = PaddedConfig(width=W, height=H, fps=60, flow=flow)
+    if a.center:
+        cfg.pad_up = cfg.pad_down = float(a.pad)
     if a.preview:                 # halve frame AND scale: the lattice, i.e. the physics, is unchanged
         cfg.width, cfg.height, cfg.scale, cfg.fps = cfg.width // 2, cfg.height // 2, cfg.scale / 2, 30
     cfg.u0, cfg.re, cfg.steps, cfg.field, cfg.film = a.u0, a.re, a.steps, a.field, a.film
@@ -364,7 +400,11 @@ def main():
     sweep = tuple(float(s) for s in a.sweep.split(":")) if a.sweep else None
     title = a.title or (os.path.basename(a.model) +
                         (f"  |  {info['mode']}" if a.slice is not None else ""))
-    scene = ModelInTunnel(body, chord, cx=cfg.vis_x0 + 0.26 * cfg.vis_nx, cy=cfg.ny / 2,
+    if a.center:      # the body's own middle (x = 0.5 in unit space) on the frame's centre
+        cx = cfg.vis_x0 + 0.5 * cfg.vis_nx - (0.5 - a.pivot) * chord
+    else:
+        cx = cfg.vis_x0 + 0.26 * cfg.vis_nx
+    scene = ModelInTunnel(body, chord, cx=cx, cy=cfg.vis_y0 + cfg.vis_ny / 2,
                           aoa=a.aoa, sweep=sweep, duration=a.seconds, pivot=a.pivot, title=title)
 
     tun = Tunnel(scene, cfg)
