@@ -457,7 +457,7 @@ def main():
             img = tun.frame(t)
             if not a.no_hud:
                 img = hud(img, [title,
-                                f"AoA {scene._aoa:+5.1f} deg   Re {cfg.re:g}",
+                                f"AoA {scene._aoa:+5.1f} deg   Re {cfg.re:,.0f}",
                                 f"Cd {cd_s:6.3f}   Cl {cl_s:+6.3f}   L/D {cl_s / max(cd_s, 1e-6):+5.2f}"],
                           font)
             if look is not None:
